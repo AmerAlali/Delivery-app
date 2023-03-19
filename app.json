@@ -1,0 +1,48 @@
+{
+  "expo": {
+    "name": "CraveCorner",
+    "slug": "CraveCorner",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "scheme": "com.cravecorner.app",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/NEW.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#FFFFF"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.cravecorner.app",
+      "config": {
+        "googleMapsApiKey": "AIzaSyAqFPn1icSrIlBjMXKcrYftXNcdXqU9mDw"
+      }
+    },
+    "android": {
+      "googleServicesFile": "./google-services.json",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#00CCBC"
+      },
+      "package": "com.cravecorner.app",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyAqFPn1icSrIlBjMXKcrYftXNcdXqU9mDw"
+        }
+      }
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7ff3b03f-eb73-408f-8ac3-6715d23eb09a"
+      }
+    }
+  }
+}

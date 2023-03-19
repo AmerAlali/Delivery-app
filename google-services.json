@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "523640477261",
+    "firebase_url": "https://cravecorner-7456b-default-rtdb.firebaseio.com",
+    "project_id": "cravecorner-7456b",
+    "storage_bucket": "cravecorner-7456b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:523640477261:android:1be7f009c9cb5057486e04",
+        "android_client_info": {
+          "package_name": "com.cravecorner.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "523640477261-qvdtct4vmn0hiuh72r58upmned4ld6po.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.cravecorner.app",
+            "certificate_hash": "4ef91cb68c09cd906fd1b94cc05b915f1f24af5a"
+          }
+        },
+        {
+          "client_id": "523640477261-ajnlaeatm96lb3pbjqfssokb76q10op3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCshB8L8aSHBzTHMo_1b1XYsQ36qdYsGpM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "523640477261-ajnlaeatm96lb3pbjqfssokb76q10op3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
