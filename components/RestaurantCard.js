@@ -54,7 +54,7 @@ const RestaurantCard = ({
   return (
     <TouchableOpacity
       onPress={navgiateToResScreen}
-      className="bg-white mr-3 shadow rounded-md overflow-hidden"
+      className="bg-white mr-3 w-64 shadow rounded-md overflow-hidden"
     >
       <SharedElement id={`restaurant.${id}.image.${CategoryName}`}>
         <Image
@@ -73,16 +73,12 @@ const RestaurantCard = ({
             {title}
           </Text>
         </View>
-        {/*<View>
-          <Text style={{ fontFamily: mainFont }} className="text-gray-600 mb-1">
-            {res_keywords && res_keywords.map((keyword) => keyword + " ")}
-          </Text>
-        </View>*/}
         <View className="flex-row mt-2">
           <View className="flex-row gap-2 items-center">
             <Ionicons name="timer-outline" size={12} color="black" />
             <Text className="text-xs">
-              {mind_time + " - " + maxDeliveryTime + " dk"}
+              {mind_time && mind_time}
+              {maxDeliveryTime && " - " + maxDeliveryTime + " dk"}
             </Text>
             <Text className="text-gray-200"> | </Text>
           </View>
@@ -98,28 +94,6 @@ const RestaurantCard = ({
             <Text>₺{deliveryLimit}</Text>
           </View>
         </View>
-        {/*<View className="flex-row-reverse items-center ">
-          <Text style={{ fontFamily: mainFont }} className="text-gray-600">
-            {i18n.t("minOrderLimitText")}
-          </Text>
-          <Text style={{ fontFamily: mainFont }} className="text-gray-600">
-            {deliveryLimit}₺ .{" "}
-          </Text>
-        </View>
-        {deliveryCost !== "0" ? (
-          <Text>{deliveryCost}</Text>
-        ) : (
-          <View className="flex-row-reverse gap-2 items-center">
-            <MaterialIcons name="motorcycle" size={18} color={mainColor} />
-            <Text style={{ fontFamily: mainFont }} className="text-[#00ccbc]">
-              {i18n.t("freeDelivery")}
-            </Text>
-          </View>
-        )}}
-        {/*<View className="flex-row items-center space-x-1">
-          <MapPinIcon color="gray" opacity={0.4} size={22} />
-          <Text className="text-xs text-gray-500">{adress}</Text>
-        </View>*/}
       </View>
       {activity === "false" ? (
         <View className="h-36   w-full absolute bg-[#1b1b1b96] ">

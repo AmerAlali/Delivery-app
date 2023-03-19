@@ -43,26 +43,46 @@ import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import {
-  createSharedElementStackNavigator,
-  SharedElement,
-} from "react-navigation-shared-element";
+import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 import CustomDrawer from "./components/CustomDrawer";
 import OffersScreen from "./screens/OffersScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 import { useLanguage } from "./hooks/useLanguage";
 import * as SecureStore from "expo-secure-store";
 
-const Stack = createSharedElementStackNavigator();
+const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 SplashScreen.preventAutoHideAsync();
 const HomeStackNav = createSharedElementStackNavigator();
+const RestaurantScreenStack = createSharedElementStackNavigator();
 
 function HomeStack() {
   return (
     <HomeStackNav.Navigator screenOptions={{ headerShown: false }}>
       <HomeStackNav.Screen name="HomeScreen" component={HomeScreen} />
+      <HomeStackNav.Screen
+        name="Restaurant"
+        component={RestaurantScreen}
+        sharedElements={(route, otherRoute, showing) => {
+          const { id, CategoryName } = route.params;
+          return [
+            {
+              id: `restaurant.${id}.image.${CategoryName}`,
+              animation: "move",
+            },
+          ];
+        }}
+      />
+      <HomeStackNav.Screen name="Search" component={SearchScreen} />
     </HomeStackNav.Navigator>
+  );
+}
+function RestaurantStack() {
+  return (
+    <RestaurantScreenStack.Navigator
+      initialRouteName="RestaurantScreen"
+      screenOptions={{ headerShown: false }}
+    ></RestaurantScreenStack.Navigator>
   );
 }
 
@@ -216,19 +236,6 @@ export default function App() {
 
                   {/**** Restaurant screens ****/}
                   <Stack.Screen
-                    name="Restaurant"
-                    component={RestaurantScreen}
-                    sharedElements={(route, otherRoute, showing) => {
-                      const { id, CategoryName } = route.params;
-                      return [
-                        {
-                          id: `restaurant.${id}.image.${CategoryName}`,
-                          animation: "move",
-                        },
-                      ];
-                    }}
-                  />
-                  <Stack.Screen
                     name="ProductDetails"
                     component={ProductScreen}
                   />
@@ -247,7 +254,6 @@ export default function App() {
                   <Stack.Screen name="Login" component={LoginScreen} />
                   <Stack.Screen name="Register" component={RegisterScreen} />
                   <Stack.Screen name="Results" component={ResultsScreen} />
-                  <Stack.Screen name="Search" component={SearchScreen} />
                   <Stack.Screen name="Checkout" component={CheckoutScreen} />
                   <Stack.Screen
                     name="PaymentSelect"

@@ -115,6 +115,12 @@ const SearchScreen = () => {
                   activity={restaurant.activity}
                   res_keywords={restaurant.res_keywords}
                   isdiscounted={restaurant.isdiscounted}
+                  deliveryLimit={restaurant.deliveryLimit}
+                  deliveryCost={restaurant.deliveryCost}
+                  CategoryName={"search"}
+                  mind_time={restaurant.mind_time}
+                  maxDeliveryTime={restaurant.maxd_time}
+                  reviews={restaurant.reviews}
                 />
               );
             })}

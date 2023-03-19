@@ -30,6 +30,7 @@ const RestaurantScreen = () => {
   const [sectionHeights, setSectionHeights] = useState([]);
   const [flatListHeaderHeight, setFlatListHeaderHeight] = useState(null);
   const [loading, setIsLoading] = useState(null);
+
   const {
     params: {
       id,

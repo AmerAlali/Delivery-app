@@ -94,7 +94,7 @@ const CustomDrawer = (props) => {
   }
   return (
     <View className="flex-1">
-      <View className="bg-[#ffd700] h-10 -mb-8"></View>
+      <View className="bg-[#ffd700] absolute h-10 top-0 z-10 w-full"></View>
       <View
         style={{
           shadowColor: "#000000",
