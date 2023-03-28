@@ -6,8 +6,8 @@ import { useState } from "react";
 import { useEffect } from "react";
 import { useLanguage } from "../hooks/useLanguage";
 
-const Categories = ({ restaurants }) => {
-  const {i18n} = useLanguage();
+const Categories = () => {
+  const { i18n } = useLanguage();
   const [categories, setCategories] = useState(null);
 
   useEffect(() => {
@@ -21,10 +21,21 @@ const Categories = ({ restaurants }) => {
         }
       );
       setCategories(response.data);
-      console.log(response.data)
     };
     fetchCategories();
   }, []);
+
+  const categoryName = (category) => {
+    let name;
+    if (i18n.locale === "ar") {
+      name = category.tag_name;
+    } else if (i18n.locale === "en") {
+      name = category.en_tag_name;
+    } else {
+      name = category.tr_tag_name;
+    }
+    return name;
+  };
   return (
     <ScrollView
       contentContainerStyle={{
@@ -40,8 +51,8 @@ const Categories = ({ restaurants }) => {
             <CategoryCard
               key={category.id}
               imgUrl={`https://cravecorner.shop/public/storage/${category.image}`}
-              title={i18n.locale === "ar" ? category.tag_name : category.tr_tag_name}
-              restaurants={restaurants}
+              title={categoryName(category)}
+              category_id={category.id}
             />
           );
         })}

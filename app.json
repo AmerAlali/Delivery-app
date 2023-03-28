@@ -10,10 +10,7 @@
     "splash": {
       "image": "./assets/NEW.png",
       "resizeMode": "cover",
-      "backgroundColor": "#FFFFF"
-    },
-    "updates": {
-      "fallbackToCacheTimeout": 0
+      "backgroundColor": "#ffffff"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -27,7 +24,7 @@
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#00CCBC"
+        "backgroundColor": "#ffffff"
       },
       "package": "com.cravecorner.app",
       "config": {
@@ -43,6 +40,9 @@
       "eas": {
         "projectId": "7ff3b03f-eb73-408f-8ac3-6715d23eb09a"
       }
+    },
+    "runtimeVersion": {
+      "policy": "sdkVersion"
     }
   }
 }

@@ -9,21 +9,16 @@ import {
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useRoute } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
-import {
-  ArrowLeftIcon,
-  MapPinIcon,
-  StarIcon,
-} from "react-native-heroicons/solid";
+import { ArrowLeftIcon, StarIcon } from "react-native-heroicons/solid";
 import axios from "axios";
 import BasketIcon from "../components/BasketIcon";
-import LoadingOverlay from "../components/LoadingOverlay";
 import RestaurantCategories from "../components/RestaurantCategories";
 import { MotiView } from "moti";
 import RestaurantDishesSkeleton from "../components/RestaurantDishesSkeleton";
 import * as Animatable from "react-native-animatable";
 import { SharedElement } from "react-navigation-shared-element";
+import { primaryColor, secondaryColor } from "../variables/themeVariables";
 const mainFont = "arabic-font";
-const mainColor = "black";
 const RestaurantScreen = () => {
   const navigation = useNavigation();
   const [restaurantCategories, setRestaurantCategories] = useState(null);
@@ -43,6 +38,9 @@ const RestaurantScreen = () => {
       mind_time,
       maxDeliveryTime,
       CategoryName,
+      Rev_service,
+      Rev_delivery,
+      Rev_taste,
     },
   } = useRoute();
 
@@ -166,19 +164,29 @@ const RestaurantScreen = () => {
           <View className="px-4 pt-6">
             <View className="flex-row justify-between  items-center">
               <Text className="text-3xl font-bold ">{title}</Text>
-              <View className="flex-row  bg-[#ffd700] px-2 py-1 rounded-full items-center space-x-1">
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("Reviews", {
+                    id,
+                    imgUrl,
+                    title,
+                    rating,
+                    Rev_service,
+                    Rev_delivery,
+                    Rev_taste,
+                  })
+                }
+                className="flex-row px-2 py-1 rounded-full items-center space-x-1"
+                style={{ backgroundColor: primaryColor }}
+              >
                 <StarIcon color="#434340" opacity={1} size={22} />
                 <Text className="text-sm ">
                   <Text style={{ color: "#434340" }}>{rating}</Text>
                 </Text>
-              </View>
+              </TouchableOpacity>
             </View>
             <View className="flex-row space-x-2 my-1">
               <View className="flex-row items-center space-x-1"></View>
-              {/*<View className="flex-row items-center space-x-1">
-                <MapPinIcon color="gray" opacity={0.4} size={22} />
-                <Text className="rext-xs text-gray-500"> {adress}</Text>
-    </View>*/}
             </View>
             <View>
               <Text
@@ -219,11 +227,8 @@ const RestaurantScreen = () => {
         easing="ease-in-out"
         className="absolute top-14 left-5 z-10 bg-gray-100 rounded-full"
       >
-        <TouchableOpacity
-          onPress={() => navigation.navigate("Home")}
-          className="p-2"
-        >
-          <ArrowLeftIcon size={20} color="#ffd700" />
+        <TouchableOpacity onPress={navigation.goBack} className="p-2">
+          <ArrowLeftIcon size={20} color={secondaryColor} />
         </TouchableOpacity>
       </Animatable.View>
       <Animated.View
@@ -281,7 +286,7 @@ const RestaurantScreen = () => {
                 <MotiView
                   style={{
                     backgroundColor:
-                      activeTabIndex === index ? mainColor : "#ffff",
+                      activeTabIndex === index ? primaryColor : "#ffff",
                   }}
                   animate={{
                     opacity: activeTabIndex === index ? 1 : 0.6,
@@ -289,10 +294,8 @@ const RestaurantScreen = () => {
                   className={`px-4 py-1 rounded-full`}
                 >
                   <Text
-                    style={{ fontFamily: mainFont }}
-                    className={`text-base ${
-                      activeTabIndex === index ? "text-white" : "text-black"
-                    }`}
+                    style={{ fontFamily: mainFont, color: secondaryColor }}
+                    className={`text-base `}
                   >
                     {item.Category_name}
                   </Text>

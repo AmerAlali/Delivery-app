@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
-import { NavigationContainer, useFocusEffect } from "@react-navigation/native";
+import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -11,14 +11,7 @@ import { store } from "./store";
 import { Provider as PaperProvider } from "react-native-paper";
 import { TailwindProvider } from "tailwindcss-react-native";
 import { StatusBar } from "expo-status-bar";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { MaterialIcons } from "@expo/vector-icons";
-import {
-  UserIcon,
-  HomeIcon,
-  ShoppingBagIcon,
-  MapPinIcon,
-} from "react-native-heroicons/outline";
+import { ShoppingBagIcon } from "react-native-heroicons/outline";
 /********************** Screens ***********************/
 import HomeScreen from "./screens/HomeScreen";
 import RestaurantScreen from "./screens/RestaurantScreen";
@@ -42,25 +35,28 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { createSharedElementStackNavigator } from "react-navigation-shared-element";
 import CustomDrawer from "./components/CustomDrawer";
 import OffersScreen from "./screens/OffersScreen";
 import SettingsScreen from "./screens/SettingsScreen";
 import { useLanguage } from "./hooks/useLanguage";
-import * as SecureStore from "expo-secure-store";
-
+import * as Localization from "expo-localization";
+import * as Notifications from "expo-notifications";
+import ReviewsScreen from "./screens/ReviewsScreen";
+import VoucherScreen from "./screens/VoucherScreen";
+import ResetPasswordScreen from "./screens/ResetPasswordScreen";
+import OtpScreen from "./screens/OtpScreen";
+import ChangePasswordScreen from "./screens/ChangePasswordScreen";
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 SplashScreen.preventAutoHideAsync();
-const HomeStackNav = createSharedElementStackNavigator();
-const RestaurantScreenStack = createSharedElementStackNavigator();
+const SharedElementStack = createSharedElementStackNavigator();
 
 function HomeStack() {
   return (
-    <HomeStackNav.Navigator screenOptions={{ headerShown: false }}>
-      <HomeStackNav.Screen name="HomeScreen" component={HomeScreen} />
-      <HomeStackNav.Screen
+    <SharedElementStack.Navigator screenOptions={{ headerShown: false }}>
+      <SharedElementStack.Screen name="HomeScreen" component={HomeScreen} />
+      <SharedElementStack.Screen
         name="Restaurant"
         component={RestaurantScreen}
         sharedElements={(route, otherRoute, showing) => {
@@ -73,23 +69,15 @@ function HomeStack() {
           ];
         }}
       />
-      <HomeStackNav.Screen name="Search" component={SearchScreen} />
-    </HomeStackNav.Navigator>
-  );
-}
-function RestaurantStack() {
-  return (
-    <RestaurantScreenStack.Navigator
-      initialRouteName="RestaurantScreen"
-      screenOptions={{ headerShown: false }}
-    ></RestaurantScreenStack.Navigator>
+      <SharedElementStack.Screen name="Search" component={SearchScreen} />
+    </SharedElementStack.Navigator>
   );
 }
 
 function DrawerScreens() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const checkLoginStatus = async () => {
-    const token = await SecureStore.getItemAsync("user");
+    const token = await AsyncStorage.getItem("user");
     setIsLoggedIn(token);
   };
   useEffect(() => {
@@ -116,8 +104,9 @@ function DrawerScreens() {
         options={{
           drawerActiveTintColor: "black",
           drawerItemStyle: { display: "none" },
+          drawerLabelStyle: { fontFamily: "arabic-font", fontSize: 15 },
           drawerActiveBackgroundColor: "white",
-          drawerIcon: ({ color, size }) => (
+          drawerIcon: ({ color }) => (
             <AntDesign name="home" size={24} color={color} />
           ),
         }}
@@ -130,9 +119,8 @@ function DrawerScreens() {
             options={{
               drawerActiveTintColor: "black",
               drawerLabel: i18n.t("profileLabel"),
-              drawerIcon: ({ color, size }) => (
-                <Feather name="user" size={24} color="black" />
-              ),
+              drawerLabelStyle: { fontFamily: "arabic-font", fontSize: 15 },
+              drawerIcon: () => <Feather name="user" size={24} color="black" />,
             }}
           />
           <Drawer.Screen
@@ -141,10 +129,9 @@ function DrawerScreens() {
             options={{
               drawerActiveTintColor: "black",
               drawerLabel: i18n.t("previousOrders"),
+              drawerLabelStyle: { fontFamily: "arabic-font", fontSize: 15 },
               unmountOnBlur: true,
-              drawerIcon: ({ color, size }) => (
-                <ShoppingBagIcon size={24} color="black" />
-              ),
+              drawerIcon: () => <ShoppingBagIcon size={24} color="black" />,
             }}
           />
           <Drawer.Screen
@@ -152,8 +139,9 @@ function DrawerScreens() {
             component={AdressesScreen}
             options={{
               drawerActiveTintColor: "black",
+              drawerLabelStyle: { fontFamily: "arabic-font", fontSize: 15 },
               drawerLabel: i18n.t("myAddresses"),
-              drawerIcon: ({ color, size }) => (
+              drawerIcon: () => (
                 <Ionicons name="ios-location-outline" size={24} color="black" />
               ),
             }}
@@ -165,8 +153,9 @@ function DrawerScreens() {
         component={OffersScreen}
         options={{
           drawerActiveTintColor: "black",
+          drawerLabelStyle: { fontFamily: "arabic-font", fontSize: 15 },
           drawerLabel: i18n.t("offersLabel"),
-          drawerIcon: ({ color, size }) => (
+          drawerIcon: () => (
             <Ionicons name="gift-outline" size={24} color="black" />
           ),
         }}
@@ -176,8 +165,9 @@ function DrawerScreens() {
         component={SettingsScreen}
         options={{
           drawerActiveTintColor: "black",
+          drawerLabelStyle: { fontFamily: "arabic-font", fontSize: 15 },
           drawerLabel: i18n.t("settingsLabel"),
-          drawerIcon: ({ color, size }) => (
+          drawerIcon: () => (
             <Ionicons name="ios-settings-outline" size={24} color="black" />
           ),
         }}
@@ -187,8 +177,16 @@ function DrawerScreens() {
 }
 
 export default function App() {
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: true,
+    }),
+  });
   const [backupNeighborhoodID, setBackupNeighborhoodID] = useState(false);
 
+  const { setLanguage } = useLanguage();
   const [fontsLoaded] = useFonts({
     "arabic-font": require("./assets/fonts/Almarai-Regular.ttf"),
   });
@@ -201,6 +199,25 @@ export default function App() {
     };
     isFontsLoaded();
   }, [fontsLoaded]);
+
+  useEffect(() => {
+    const getDefaultLanguage = () => {
+      AsyncStorage.getItem("DefaultLanguage").then((response) => {
+        if (response === null) {
+          const locale = Localization.locale.split("-")[0];
+          if (locale === "ar" || locale === "en" || locale === "tr") {
+            setLanguage(locale);
+          } else {
+            setLanguage("tr");
+          }
+        }
+        if (response !== null && response !== undefined) {
+          setLanguage(response);
+        }
+      });
+    };
+    getDefaultLanguage();
+  }, []);
 
   useEffect(() => {
     const getBackupNeighborhoodID = async () => {
@@ -221,7 +238,9 @@ export default function App() {
             <BottomSheetModalProvider>
               <GestureHandlerRootView style={{ flex: 1 }}>
                 <Stack.Navigator
-                  initialRouteName={!backupNeighborhoodID && "Home"}
+                  initialRouteName={
+                    backupNeighborhoodID === null ? "FindRestaurants" : "Home"
+                  }
                   screenOptions={{
                     headerShown: false,
                   }}
@@ -239,6 +258,14 @@ export default function App() {
                     name="ProductDetails"
                     component={ProductScreen}
                   />
+                  <Stack.Screen name="Results" component={ResultsScreen} />
+                  <Stack.Screen name="Checkout" component={CheckoutScreen} />
+                  <Stack.Screen
+                    name="PaymentSelect"
+                    component={PaymentSelectScreen}
+                  />
+                  <Stack.Screen name="Voucher" component={VoucherScreen} />
+                  <Stack.Screen name="Reviews" component={ReviewsScreen} />
                   <Stack.Screen name="Basket" component={BasketScreen} />
                   {/*** Orders screens ***/}
                   <Stack.Screen
@@ -252,13 +279,16 @@ export default function App() {
                   <Stack.Screen name="Orders" component={OrdersScreen} />
                   {/**** auth screens ****/}
                   <Stack.Screen name="Login" component={LoginScreen} />
-                  <Stack.Screen name="Register" component={RegisterScreen} />
-                  <Stack.Screen name="Results" component={ResultsScreen} />
-                  <Stack.Screen name="Checkout" component={CheckoutScreen} />
                   <Stack.Screen
-                    name="PaymentSelect"
-                    component={PaymentSelectScreen}
+                    name="ResetPassword"
+                    component={ResetPasswordScreen}
                   />
+                  <Stack.Screen name="OtpScreen" component={OtpScreen} />
+                  <Stack.Screen
+                    name="ChangePassword"
+                    component={ChangePasswordScreen}
+                  />
+                  <Stack.Screen name="Register" component={RegisterScreen} />
                   {/**** profile screens ****/}
 
                   {/**** Addresses screens ****/}

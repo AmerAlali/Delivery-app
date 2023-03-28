@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as SecureStore from "expo-secure-store";
 
 export const userSlice = createSlice({
   name: "user",
@@ -26,7 +25,7 @@ export const { login, logout } = userSlice.actions;
 
 export const getUserToken = createAsyncThunk("user/getUserToken", async () => {
   //const value = await AsyncStorage.getItem("user");
-  const user = await SecureStore.getItemAsync("user");
+  const user = await AsyncStorage.getItem("user");
   return JSON.parse(user);
 });
 

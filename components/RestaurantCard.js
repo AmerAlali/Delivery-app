@@ -25,6 +25,9 @@ const RestaurantCard = ({
   maxDeliveryTime,
   CategoryName,
   reviews,
+  Rev_service,
+  Rev_delivery,
+  Rev_taste,
 }) => {
   const navigation = useNavigation();
   const mainFont = "arabic-font";
@@ -48,6 +51,9 @@ const RestaurantCard = ({
         maxDeliveryTime,
         CategoryName,
         reviews,
+        Rev_service,
+        Rev_delivery,
+        Rev_taste,
       });
     }
   };
@@ -101,7 +107,7 @@ const RestaurantCard = ({
             style={{ fontFamily: mainFont }}
             className="text-center text-white text-2xl font-semibold top-16"
           >
-            مغلق حالياً
+            {i18n.t("closedNow")}
           </Text>
         </View>
       ) : null}

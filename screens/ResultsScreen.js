@@ -4,58 +4,90 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import SearchRestaurantCard from "../components/SearchRestaurantCard";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { useState } from "react";
+import { arabicFont, secondaryColor } from "../variables/themeVariables";
 
 const ResultsScreen = () => {
   const navigation = useNavigation();
-  const {
-    params: { title, restaurants },
-  } = useRoute();
+  const { neighborhoodID } = useSelector((state) => state.neighborhoodID);
+  const [restaurants, setRestaurants] = useState(null);
 
-  const filterRestaurants = restaurants.filter((res) => {
-    const resKeywords = res.res_keywords;
-    const isResKeywordArray = Array.isArray(resKeywords);
-    if (isResKeywordArray) {
-      const includesTitle = resKeywords.some((keyword) =>
-        keyword.includes(title)
-      );
-      return includesTitle;
-    }
-    return false;
-  });
+  const {
+    params: { title, category_id },
+  } = useRoute();
+  const fetchRestaurantsByCategory = async () => {
+    const response = await axios.get(
+      `https://cravecorner.shop/api/fetchByCategory?category_id=${category_id}}&neigh_id=${neighborhoodID[0]}`,
+      { headers: { userAgent: "CraveMobile" } }
+    );
+    setRestaurants(response.data);
+  };
+  useEffect(() => {
+    fetchRestaurantsByCategory();
+  }, []);
 
   return (
-    <SafeAreaView className="bg-gray-100">
-      <View
-        className=" flex-row-reverse justify-between items-center space-x-2 p-3  bg-white"
-        style={{ direction: "ltr", paddingTop: 50 }}
-      >
-        <Text className="text-lg mr-1">{title}</Text>
-        <TouchableOpacity
-          onPress={navigation.goBack}
-          className="shadow bg-gray-100 rounded-full p-2"
-        >
-          <ArrowLeftIcon size={20} color="#00ccbc" />
-        </TouchableOpacity>
+    <SafeAreaView className="bg-white">
+      {/********** Header **********/}
+      <View className="p-5 py-4 border-b border-[#d8dad9] bg-white shadow-xs">
+        <View className=" flex-row-reverse justify-between items-center">
+          <View>
+            <Text
+              style={{ fontFamily: arabicFont }}
+              className="text-lg text-center"
+            >
+              {title}
+            </Text>
+          </View>
+          <View>
+            <TouchableOpacity
+              onPress={navigation.goBack}
+              className="shadow bg-gray-100 rounded-full p-2 mr-4"
+            >
+              <ArrowLeftIcon size={20} color={secondaryColor} />
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
-      <ScrollView className="p-3">
-        {filterRestaurants.map((element) => {
-          return (
-            <SearchRestaurantCard
-              key={element.id}
-              id={element.id}
-              imgUrl={`https://cravecorner.shop/public/storage/${element.image}`}
-              title={element.name}
-              rating={4.5}
-              genre={element.keywords}
-              adress={element.neighborhood}
-              short_description="This is a Test description"
-              res_keywords={element.res_keywords}
-              activity={element.activity}
-              isdiscounted={element.isdiscounted}
-            />
-          );
-        })}
-      </ScrollView>
+      {
+        <ScrollView
+          className="p-3 bg-gray-100"
+          showsVerticalScrollIndicator={false}
+        >
+          <View className="pb-36">
+            {restaurants &&
+              restaurants.map((restaurant) => {
+                return (
+                  <SearchRestaurantCard
+                    key={restaurant.id}
+                    id={restaurant.id}
+                    imgUrl={
+                      restaurant.image
+                        ? `https://cravecorner.shop/public/storage/${restaurant.image}`
+                        : "https://img.freepik.com/premium-vector/spoon-plate-icon-logo-template-vector-illustration_757387-417.jpg?w=826"
+                    }
+                    title={restaurant.name}
+                    rating={restaurant.rating}
+                    adress={restaurant.neighborhood}
+                    activity={restaurant.activity}
+                    res_keywords={restaurant.res_keywords}
+                    isdiscounted={restaurant.isdiscounted}
+                    mind_time={restaurant.mind_time}
+                    maxDeliveryTime={restaurant.maxd_time}
+                    reviews={restaurant.reviews}
+                    deliveryLimit={restaurant.deliveryLimit}
+                    deliveryCost={restaurant.deliveryCost}
+                    Rev_service={restaurant.Rev_service}
+                    Rev_delivery={restaurant.Rev_delivery}
+                    Rev_taste={restaurant.Rev_taste}
+                  />
+                );
+              })}
+          </View>
+        </ScrollView>
+      }
     </SafeAreaView>
   );
 };

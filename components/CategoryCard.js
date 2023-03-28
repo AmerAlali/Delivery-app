@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, Image } from "react-native";
 import React, { memo } from "react";
 import { useNavigation } from "@react-navigation/native";
 
-const CategoryCard = ({ imgUrl, title, restaurants }) => {
+const CategoryCard = ({ imgUrl, title, category_id }) => {
   const mainFont = "arabic-font";
   const navigation = useNavigation();
   return (
@@ -10,12 +10,12 @@ const CategoryCard = ({ imgUrl, title, restaurants }) => {
       className="relative mr-2"
       onPress={() => {
         navigation.navigate("Results", {
+          category_id,
           title,
-          restaurants,
         });
       }}
     >
-      <Image source={{ uri: imgUrl }} className="h-20 w-28 rounded"></Image>
+      <Image source={{ uri: imgUrl }} className="h-20 w-28 rounded" />
       <Text
         style={{ fontFamily: mainFont }}
         className="absolute bottom-1 left-1 text-white capitalize"

@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, ScrollView } from "react-native";
-import React from "react";
+import React, { useRef } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { PencilSquareIcon, MapPinIcon } from "react-native-heroicons/outline";
@@ -15,14 +15,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { setSelectedAddress } from "../features/selectedAddressSlice";
 import { setNeighborhoodID } from "../features/neighborhoodSlice";
 import { useLanguage } from "../hooks/useLanguage";
-
+import { primaryColor, secondaryColor } from "../variables/themeVariables";
+import { Alert } from "react-native";
 const AddressFormScreen = () => {
   const {
     params: { Address },
   } = useRoute();
   const navigation = useNavigation();
-  const {i18n} = useLanguage();
-  const mainColor = "#000000"
+  const { i18n } = useLanguage();
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const [newAddress, setNewAddress] = useState({
@@ -44,29 +44,102 @@ const AddressFormScreen = () => {
     neighborhoodID: Address.neighborhoodID,
   });
 
+  const [formErrors, setFormErrors] = useState({
+    street: "",
+    building_no: "",
+    apartment_no: "",
+    buildingName: "",
+    discription: "",
+    floor: "",
+    phone: "",
+    neighborhood: "",
+    label: "",
+  });
+
+  // inputs ref
+  const neighborhoodRef = useRef(null);
+  const streetRef = useRef(null);
+  const buildingNameRef = useRef(null);
+  const buildingNumberRef = useRef(null);
+  const apartmentNoRef = useRef(null);
+  const floorRef = useRef(null);
+  const phoneNumberRef = useRef(null);
+  const addressTitleRef = useRef(null);
+
+  function validateInputsAndFocus() {
+    const inputs = [
+      {
+        ref: neighborhoodRef,
+        name: "Neighborhood",
+        value: newAddress.neighborhood,
+      },
+      { ref: streetRef, name: "Street", value: newAddress.street },
+      {
+        ref: buildingNameRef,
+        name: "Building Name",
+        value: newAddress.buildingName,
+      },
+      {
+        ref: buildingNumberRef,
+        name: "Building Number",
+        value: newAddress.building_no,
+      },
+      {
+        ref: apartmentNoRef,
+        name: "Apartment No.",
+        value: newAddress.apartment_no,
+      },
+      { ref: floorRef, name: "Floor", value: newAddress.floor },
+      { ref: phoneNumberRef, name: "Phone Number", value: newAddress.phone },
+      { ref: addressTitleRef, name: "Address Title", value: newAddress.label },
+    ];
+    const arabicRegex = /[\u0600-\u06FF]/;
+    let isFormValid = true;
+    for (const input of inputs) {
+      const value = input.value.trim();
+      if (!value) {
+        input.ref.current.focus();
+        setFormErrors({
+          ...formErrors,
+          [input.name]: `${input.name} is required`,
+        });
+        isFormValid = false;
+        break;
+      } else if (arabicRegex.test(value)) {
+        input.ref.current.focus();
+        Alert.alert(`${input.name} cannot be in Arabic language.`);
+        isFormValid = false;
+        break;
+      }
+    }
+    return isFormValid;
+  }
+
   const handleAddressChange = (key, value) => {
     setNewAddress((prevAddress) => ({ ...prevAddress, [key]: value }));
   };
   const handleSaveAddress = async () => {
-    await axios
-      .post("https://cravecorner.shop/api/user/address/add", newAddress, {
-        headers: {
-          Authorization: "Bearer " + user.token,
-        },
-      })
-      .then((response) => {
-        dispatch(addAddress(response.data));
-        const newAddress = response.data;
-        dispatch(setSelectedAddress(newAddress));
-        AsyncStorage.setItem("selectedAddress", JSON.stringify(newAddress));
-        AsyncStorage.setItem(
-          "neighborhoodID",
-          JSON.stringify([Address.neighborhoodID, Date.now()])
-        );
-        dispatch(setNeighborhoodID([Address.neighborhoodID, Date.now()]));
-        navigation.navigate("Home");
-      })
-      .catch((error) => console.error(error.message));
+    if (validateInputsAndFocus()) {
+      await axios
+        .post("https://cravecorner.shop/api/user/address/add", newAddress, {
+          headers: {
+            Authorization: "Bearer " + user.token,
+          },
+        })
+        .then((response) => {
+          dispatch(addAddress(response.data));
+          const newAddress = response.data;
+          dispatch(setSelectedAddress(newAddress));
+          AsyncStorage.setItem("selectedAddress", JSON.stringify(newAddress));
+          AsyncStorage.setItem(
+            "neighborhoodID",
+            JSON.stringify([Address.neighborhoodID, Date.now()])
+          );
+          dispatch(setNeighborhoodID([Address.neighborhoodID, Date.now()]));
+          navigation.navigate("Home");
+        })
+        .catch((error) => console.error(error.message));
+    }
   };
   return (
     <SafeAreaView className="bg-white h-full p-4">
@@ -84,7 +157,7 @@ const AddressFormScreen = () => {
                   onPress={navigation.goBack}
                   className="shadow bg-gray-100 rounded-full p-2 mr-4"
                 >
-                  <ArrowLeftIcon size={20} color={mainColor} />
+                  <ArrowLeftIcon size={20} color={secondaryColor} />
                 </TouchableOpacity>
               </View>
             </View>
@@ -93,13 +166,16 @@ const AddressFormScreen = () => {
         <View className="">
           <View className="flex-row justify-between items-center">
             <View className="flex-row align-middle space-x-2">
-              <MapPinIcon size={25} color={mainColor}></MapPinIcon>
+              <MapPinIcon size={25} color={secondaryColor}></MapPinIcon>
               <Text className="text-base text-gray-500 w-64">
                 {newAddress.city + " , " + newAddress.district}
               </Text>
             </View>
             <TouchableOpacity onPress={navigation.goBack}>
-              <PencilSquareIcon size={25} color={mainColor}></PencilSquareIcon>
+              <PencilSquareIcon
+                size={25}
+                color={secondaryColor}
+              ></PencilSquareIcon>
             </TouchableOpacity>
           </View>
           <View className="mt-4">
@@ -108,9 +184,11 @@ const AddressFormScreen = () => {
                 <Input
                   label={i18n.t("neighborhood")}
                   mode="outlined"
+                  ref={neighborhoodRef}
                   outlineColor="#cccc"
                   textColor="gray"
-                  activeOutlineColor={mainColor}
+                  error={formErrors.neighborhood ? true : false}
+                  activeOutlineColor={secondaryColor}
                   className="bg-white mb-3"
                   theme={{ roundness: 5 }}
                   value={newAddress.neighborhood}
@@ -124,9 +202,11 @@ const AddressFormScreen = () => {
                 <Input
                   label={i18n.t("street")}
                   mode="outlined"
+                  ref={streetRef}
                   outlineColor="#cccc"
                   textColor="gray"
-                  activeOutlineColor={mainColor}
+                  error={formErrors.street ? true : false}
+                  activeOutlineColor={secondaryColor}
                   className="bg-white mb-3"
                   theme={{ roundness: 5 }}
                   value={newAddress.street}
@@ -139,9 +219,11 @@ const AddressFormScreen = () => {
               <Input
                 label={i18n.t("buildingName")}
                 mode="outlined"
+                ref={buildingNameRef}
                 outlineColor="#cccc"
                 textColor="gray"
-                activeOutlineColor={mainColor}
+                activeOutlineColor={secondaryColor}
+                error={formErrors.buildingName ? true : false}
                 className="bg-white mb-3"
                 theme={{ roundness: 5 }}
                 value={newAddress.buildingName}
@@ -155,9 +237,11 @@ const AddressFormScreen = () => {
                 <Input
                   label={i18n.t("buildingNumber")}
                   mode="outlined"
+                  ref={buildingNumberRef}
                   outlineColor="#cccc"
                   textColor="gray"
-                  activeOutlineColor={mainColor}
+                  error={formErrors.building_no ? true : false}
+                  activeOutlineColor={secondaryColor}
                   className="bg-white mb-3"
                   theme={{ roundness: 5 }}
                   style={{ minWidth: "100%" }} // set a fixed width of 100%
@@ -171,9 +255,11 @@ const AddressFormScreen = () => {
                 <Input
                   label={i18n.t("apartmentNumber")}
                   mode="outlined"
+                  ref={apartmentNoRef}
                   outlineColor="#cccc"
                   textColor="gray"
-                  activeOutlineColor={mainColor}
+                  error={formErrors.apartment_no ? true : false}
+                  activeOutlineColor={secondaryColor}
                   className="bg-white mb-3"
                   theme={{ roundness: 5 }}
                   keyboardType={"number-pad"}
@@ -187,10 +273,12 @@ const AddressFormScreen = () => {
               <View className="flex-1">
                 <Input
                   label={i18n.t("floor")}
+                  ref={floorRef}
                   mode="outlined"
                   outlineColor="#cccc"
                   textColor="gray"
-                  activeOutlineColor={mainColor}
+                  error={formErrors.floor ? true : false}
+                  activeOutlineColor={secondaryColor}
                   className="bg-white mb-3"
                   theme={{ roundness: 5 }}
                   keyboardType={"number-pad"}
@@ -204,9 +292,11 @@ const AddressFormScreen = () => {
               <Input
                 label={i18n.t("phoneNumber")}
                 mode="outlined"
+                ref={phoneNumberRef}
                 outlineColor="#cccc"
                 textColor="gray"
-                activeOutlineColor={mainColor}
+                error={formErrors.phone ? true : false}
+                activeOutlineColor={secondaryColor}
                 className="bg-white mb-3"
                 theme={{ roundness: 5 }}
                 keyboardType={"phone-pad"}
@@ -220,7 +310,7 @@ const AddressFormScreen = () => {
                 mode="outlined"
                 outlineColor="#cccc"
                 textColor="gray"
-                activeOutlineColor={mainColor}
+                activeOutlineColor={secondaryColor}
                 className="bg-white mb-3"
                 theme={{ roundness: 5 }}
                 value={newAddress.discription}
@@ -233,9 +323,11 @@ const AddressFormScreen = () => {
               <Input
                 label={i18n.t("addressTitle")}
                 mode="outlined"
+                ref={addressTitleRef}
                 outlineColor="#cccc"
                 textColor="gray"
-                activeOutlineColor={mainColor}
+                error={formErrors.label ? true : false}
+                activeOutlineColor={secondaryColor}
                 className="bg-white mb-3"
                 theme={{ roundness: 5 }}
                 value={newAddress.label}
@@ -248,9 +340,14 @@ const AddressFormScreen = () => {
           <TouchableOpacity
             onPress={handleSaveAddress}
             className="p-4 rounded-md"
-            style={{backgroundColor: mainColor}}
+            style={{ backgroundColor: primaryColor }}
           >
-            <Text className="text-center text-lg text-white">{i18n.t("saveAddress")}</Text>
+            <Text
+              className="text-center text-lg"
+              style={{ color: secondaryColor }}
+            >
+              {i18n.t("saveAddress")}
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>

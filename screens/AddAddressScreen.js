@@ -12,12 +12,16 @@ import Lottie from "lottie-react-native";
 import { PROVIDER_GOOGLE } from "react-native-maps";
 import { useValidateAddress } from "../hooks/useValidateAddress";
 import { useLanguage } from "../hooks/useLanguage";
-
+import {
+  primaryColor,
+  secondaryColor,
+  arabicFont,
+} from "../variables/themeVariables";
 export default function AddAddressScreen() {
-  const mainColor = "#000000"
+  const mainColor = "#000000";
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [splashLoading, setSplashLoading] = useState(null);
-  const {i18n} = useLanguage();
+  const { i18n } = useLanguage();
   const [isOpen, setIsOpen] = useState(false);
   const { validateAddress } = useValidateAddress();
   const mapRef = useRef(null);
@@ -161,7 +165,7 @@ export default function AddAddressScreen() {
         }}
         className="absolute z-10 top-14 left-5 bg-gray-50  rounded-full p-2"
       >
-        <XMarkIcon size={20} color={mainColor} />
+        <XMarkIcon size={20} color={secondaryColor} />
       </TouchableOpacity>
       {/************* map component  *************/}
       <MapView
@@ -201,14 +205,14 @@ export default function AddAddressScreen() {
           }}
           onPress={handleAutoDetect}
         >
-          <MapPinIcon size={30} color={mainColor} />
+          <MapPinIcon size={30} color={primaryColor} />
         </TouchableOpacity>
       </View>
       {/************* continue button  *************/}
       <View className="bg-white p-5">
         <TouchableOpacity
           className="p-4 rounded-md"
-          style={{backgroundColor: mainColor}}
+          style={{ backgroundColor: primaryColor }}
           onPress={() => {
             handleGetAddress(
               selectedLocation.latitude,
@@ -218,8 +222,8 @@ export default function AddAddressScreen() {
           disabled={!selectedLocation}
         >
           <Text
-            className="text-center text-lg text-white"
-            style={{ fontFamily: mainFont }}
+            className="text-center text-lg"
+            style={{ fontFamily: mainFont, color: secondaryColor }}
           >
             {i18n.t("continue")}
           </Text>
@@ -254,11 +258,11 @@ export default function AddAddressScreen() {
             <TouchableOpacity
               onPress={() => setIsOpen(!isOpen)}
               className="p-2 mt-2 w-full rounded-md"
-              style={{backgroundColor: mainColor}}
+              style={{ backgroundColor: primaryColor }}
             >
               <Text
-                className="text-center text-lg text-white"
-                style={{ fontFamily: mainFont }}
+                className="text-center text-lg"
+                style={{ fontFamily: mainFont, color: secondaryColor }}
               >
                 {i18n.t("ok")}
               </Text>

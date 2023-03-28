@@ -6,20 +6,17 @@ import {
   BanknotesIcon,
   XMarkIcon,
   DevicePhoneMobileIcon,
-} from "react-native-heroicons/solid";
+} from "react-native-heroicons/outline";
 import { RadioButton } from "react-native-paper";
 import { useDispatch } from "react-redux";
 import { setPaymentMethod } from "../features/paymentMethodSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLanguage } from "../hooks/useLanguage";
 import { useRTL } from "../hooks/useRTL";
+import { primaryColor, secondaryColor } from "../variables/themeVariables";
 const mainFont = "arabic-font";
 const mainColor = "#000000";
-const { i18n } = useLanguage();
-const RTL = useRTL();
-const isRTL = RTL(i18n.t("paymentMethod"));
-
-const CustomRadioButton = ({ label, value, Icon, onPress, checked }) => {
+const CustomRadioButton = ({ label, value, Icon, onPress, checked, isRTL }) => {
   return (
     <TouchableOpacity onPress={onPress} className="">
       <View
@@ -33,9 +30,9 @@ const CustomRadioButton = ({ label, value, Icon, onPress, checked }) => {
           } items-center gap-2`}
         >
           <Text style={{ fontFamily: mainFont }}>{label}</Text>
-          <Icon size={24} color={checked ? mainColor : "#000"} />
+          <Icon size={24} color={checked ? primaryColor : "#000"} />
         </View>
-        <RadioButton color={mainColor} value={value} />
+        <RadioButton color={primaryColor} value={value} />
       </View>
     </TouchableOpacity>
   );
@@ -44,6 +41,10 @@ const PaymentSelectScreen = () => {
   const {
     params: { paymentMethod },
   } = useRoute();
+  const { i18n } = useLanguage();
+
+  const RTL = useRTL();
+  const isRTL = RTL(i18n.t("paymentMethod"));
 
   const [value, setValue] = React.useState(paymentMethod);
   const dispatch = useDispatch();
@@ -81,6 +82,7 @@ const PaymentSelectScreen = () => {
             Icon={BanknotesIcon}
             onPress={() => handlePress("cash")}
             checked={value === "cash"}
+            isRTL={isRTL}
           />
           <CustomRadioButton
             label={i18n.t("posOnDelivery")}
@@ -88,6 +90,7 @@ const PaymentSelectScreen = () => {
             Icon={CreditCardIcon}
             onPress={() => handlePress("pos")}
             checked={value === "pos"}
+            isRTL={isRTL}
           />
           <CustomRadioButton
             label={i18n.t("ibanOnDelivery")}
@@ -95,6 +98,7 @@ const PaymentSelectScreen = () => {
             Icon={DevicePhoneMobileIcon}
             onPress={() => handlePress("iban")}
             checked={value === "iban"}
+            isRTL={isRTL}
           />
         </RadioButton.Group>
       </View>

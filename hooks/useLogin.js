@@ -1,15 +1,12 @@
 import { useState, useMemo } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { login as loginAction } from "../features/userSlice";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
 import { useAddress } from "./useAddress";
 import { setSelectedAddress } from "../features/selectedAddressSlice";
-import { setLoading } from "../features/skeletonSlice";
-import { useValidateAddress } from "./useValidateAddress";
 import { setNeighborhoodID } from "../features/neighborhoodSlice";
-import * as SecureStore from "expo-secure-store";
 import * as Notifications from "expo-notifications";
 
 export const useLogin = () => {
@@ -18,7 +15,6 @@ export const useLogin = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const fetchAddresses = useAddress();
-  const { validateAddress } = useValidateAddress();
 
   const handleSelectingLastAddress = async (response) => {
     const addresses = await fetchAddresses(response.data);
@@ -57,6 +53,7 @@ export const useLogin = () => {
 
   const handleSendingDeviceToken = async (user) => {
     const DeviceID = await Notifications.getDevicePushTokenAsync();
+    console.log(DeviceID);
     console.log(user);
     if (DeviceID) {
       await axios.post(
@@ -84,8 +81,8 @@ export const useLogin = () => {
 
         // Save the user to local storage
         //await AsyncStorage.setItem("user", JSON.stringify(response.data));
-        await SecureStore.setItemAsync("user", JSON.stringify(response.data));
-        handleSendingDeviceToken(response.data);
+        await AsyncStorage.setItem("user", JSON.stringify(response.data));
+        await handleSendingDeviceToken(response.data);
         // Update the user
         dispatch(loginAction(response.data));
 
@@ -116,10 +113,12 @@ export const useLogin = () => {
 
         // Save the user to local storage
         //await AsyncStorage.setItem("user", JSON.stringify(response.data));
-        await SecureStore.setItemAsync("user", JSON.stringify(response.data));
+        await AsyncStorage.setItem("user", JSON.stringify(response.data));
 
         // Update the user
         dispatch(loginAction(response.data));
+
+        await handleSendingDeviceToken(response.data);
 
         await handleSelectingLastAddress(response);
 

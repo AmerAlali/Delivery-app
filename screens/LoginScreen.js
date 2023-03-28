@@ -6,8 +6,8 @@ import { useLogin } from "../hooks/useLogin";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import LoadingOverlay from "../components/LoadingOverlay";
-import { useDispatch } from "react-redux";
 import { useLanguage } from "../hooks/useLanguage";
+import { primaryColor, secondaryColor } from "../variables/themeVariables";
 WebBrowser.maybeCompleteAuthSession();
 const LoginScreen = () => {
   const mainColor = "#000000";
@@ -18,9 +18,6 @@ const LoginScreen = () => {
   const [passwordError, setPasswordError] = useState("");
   const { login, isLoading, error, googleLogin } = useLogin();
   const { i18n } = useLanguage();
-
-  //google auth test
-  const [token, setToken] = useState("");
 
   const [request, response, promptAsync] = Google.useAuthRequest({
     androidClientId:
@@ -33,12 +30,11 @@ const LoginScreen = () => {
   useEffect(() => {
     const handleGoogleLogin = async () => {
       if (response?.type === "success") {
-        setToken(response.authentication.accessToken);
         await googleLogin(response.authentication.idToken);
       }
     };
     handleGoogleLogin();
-  }, [response, token]);
+  }, [response]);
   // Validate email
   const handleEmailValidation = () => {
     if (!email) {
@@ -68,13 +64,13 @@ const LoginScreen = () => {
   };
 
   return (
-    <View className="bg-white h-full overflow-hidden tracking-wide">
-      <Image
-        source={require("../assets/LoginBg.jpg")}
-        className="w-full h-52"
-      />
+    <View
+      className=" h-full items-center pt-8  overflow-hidden tracking-wide"
+      style={{ backgroundColor: primaryColor }}
+    >
+      <Image source={require("../assets/user-img.png")} className="h-36 w-36" />
       <View
-        className="bg-[#fdfdfd] -mt-10 h-full w-full p-6"
+        className="bg-[#fdfdfd] mt-6 h-full w-full p-6"
         style={{ borderTopLeftRadius: 45, borderTopRightRadius: 45 }}
       >
         <View>
@@ -118,10 +114,13 @@ const LoginScreen = () => {
           <TouchableOpacity
             onPress={handeLogin}
             disabled={isLoading}
-            style={{ backgroundColor: mainColor }}
+            style={{ backgroundColor: primaryColor }}
             className="p-3 text-center mt-2 rounded-md"
           >
-            <Text className="text-white text-base text-center">
+            <Text
+              style={{ color: secondaryColor }}
+              className="text-base text-center"
+            >
               {i18n.t("login")}
             </Text>
           </TouchableOpacity>
@@ -130,8 +129,11 @@ const LoginScreen = () => {
               {i18n.t("wrongPasswordEmailError")}
             </Text>
           )}
-          <TouchableOpacity className="p-3 text-center">
-            <Text style={{ color: mainColor }} className="text-base">
+          <TouchableOpacity
+            onPress={() => navigation.navigate("ResetPassword")}
+            className="p-3 text-center"
+          >
+            <Text style={{ color: secondaryColor }} className="text-base">
               {i18n.t("forgotPassword")}
             </Text>
           </TouchableOpacity>
@@ -166,12 +168,13 @@ const LoginScreen = () => {
           <TouchableOpacity
             disabled={!request}
             onPress={() => promptAsync()}
-            className="p-3 bg-[#f8f8f8] space-x-3 rounded-full"
+            className="p-3 flex-row items-center justify-around bg-[#f8f8f8] space-x-3 w-full rounded-md shadow"
           >
             <Image
               source={require("../assets/google.png")}
-              className="h-5 w-5"
+              className="h-8 w-8"
             />
+            <Text className="pr-12 text-base">Continue With Google</Text>
           </TouchableOpacity>
         </View>
         <TouchableOpacity

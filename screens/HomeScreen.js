@@ -35,7 +35,6 @@ import FeaturedRow from "../components/FeaturedRow";
 import HomeScreenSkeleton from "../components/HomeScreenSkeleton";
 import SearchRestaurantCard from "../components/SearchRestaurantCard";
 import SelectAddress from "../components/SelectAddress";
-
 import { getNeighborhoodID } from "../features/neighborhoodSlice";
 import { setLoading } from "../features/skeletonSlice";
 import { getSelectedAddress } from "../features/selectedAddressSlice";
@@ -62,6 +61,10 @@ const HomeScreen = () => {
     deliverySpeed: 0,
     services: 0,
   });
+
+  useEffect(() => {
+    console.log(i18n.locale);
+  }, [i18n.locale]);
 
   //redux selectors
   const { user } = useSelector((state) => state.user);
@@ -295,7 +298,7 @@ const HomeScreen = () => {
           <ScrollView className="bg-gray-100">
             <View className="pb-36">
               {/* Categories */}
-              <Categories restaurants={restaurants} />
+              <Categories />
 
               {restaurants && (
                 <FeaturedRow
@@ -344,6 +347,9 @@ const HomeScreen = () => {
                         reviews={restaurant.reviews}
                         deliveryLimit={restaurant.deliveryLimit}
                         deliveryCost={restaurant.deliveryCost}
+                        Rev_service={restaurant.Rev_service}
+                        Rev_delivery={restaurant.Rev_delivery}
+                        Rev_taste={restaurant.Rev_taste}
                       />
                     );
                   })}

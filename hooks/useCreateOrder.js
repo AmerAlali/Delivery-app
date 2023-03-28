@@ -17,7 +17,9 @@ export const useCreateOrder = () => {
     total,
     discount,
     deliveryCost,
-    datalist
+    datalist,
+    voucher,
+    phone
   ) => {
     setIsLoading(true);
     setError(null);
@@ -35,6 +37,8 @@ export const useCreateOrder = () => {
           discount: discount,
           deliveryCost: deliveryCost,
           datalist: datalist,
+          voucher: voucher,
+          phone: phone,
         }
       );
       disptach(clearBasketItems());

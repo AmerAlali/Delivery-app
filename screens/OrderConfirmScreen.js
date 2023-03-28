@@ -10,12 +10,14 @@ import {
 } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BackHandler } from "react-native";
+import { useLanguage } from "../hooks/useLanguage";
 
 const OrderConfirmScreen = () => {
   const {
     params: { order_id },
   } = useRoute();
   const navigatedFrom = "OrderConfirm";
+  const { i18n } = useLanguage();
   const navigation = useNavigation();
   const animationRef = useRef(null);
   useEffect(() => {
@@ -51,7 +53,7 @@ const OrderConfirmScreen = () => {
         source={require("../assets/95088-success.json")}
       />
       <Text style={{ fontFamily: "arabic-font" }} className="text-3xl">
-        لقد أخذنا طلبك!
+        {i18n.t("receivedOrder")}
       </Text>
     </SafeAreaView>
   );

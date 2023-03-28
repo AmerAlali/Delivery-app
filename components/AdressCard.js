@@ -4,7 +4,12 @@ import { HomeIcon, TrashIcon } from "react-native-heroicons/outline";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteAddress } from "../features/addressSlice";
-
+import {
+  primaryColor,
+  secondaryColor,
+  arabicFont,
+} from "../variables/themeVariables";
+import { AntDesign } from "@expo/vector-icons";
 const AdressCard = ({
   id,
   city,
@@ -19,7 +24,6 @@ const AdressCard = ({
 }) => {
   const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
-  const mainColor = "black";
   const handleAddressDelete = useCallback(() => {
     axios
       .delete("https://cravecorner.shop/api/user/address/delete", {
@@ -45,7 +49,7 @@ const AdressCard = ({
       }}
     >
       <View className="flex-row items-center space-x-2">
-        <HomeIcon size={30} color={mainColor} />
+        <AntDesign name="home" size={27} color={secondaryColor} />
         <View>
           <Text className="text-lg w-60">{discription}</Text>
           <Text className="text-md text-gray-500 w-60">
@@ -67,7 +71,7 @@ const AdressCard = ({
           ])
         }
       >
-        <TrashIcon size={25} color={mainColor} />
+        <TrashIcon size={25} color={secondaryColor} />
       </TouchableOpacity>
     </View>
   );

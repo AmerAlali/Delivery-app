@@ -6,10 +6,14 @@ import { ArrowPathIcon } from "react-native-heroicons/outline";
 import { useDispatch, useSelector } from "react-redux";
 import { addToBasket, clearBasketItems } from "../features/basketSlice";
 import { useLanguage } from "../hooks/useLanguage";
-
+import {
+  primaryColor,
+  secondaryColor,
+  arabicFont,
+} from "../variables/themeVariables";
 const OrderCard = ({ orderInfo }) => {
   const { restaurants } = useSelector((state) => state.restaurants);
-  const {i18n} = useLanguage();
+  const { i18n } = useLanguage();
   const [restaurantID, setRestaurantID] = useState(null);
   const {
     restaurant_title,
@@ -31,8 +35,6 @@ const OrderCard = ({ orderInfo }) => {
       }
     }
   }, []);
-  const mainColor = "#000000";
-  const mainFont = "arabic-font";
 
   const formatDate = (dateStr) => {
     const date = new Date(dateStr);
@@ -54,7 +56,7 @@ const OrderCard = ({ orderInfo }) => {
   const isRtl = useRTL();
   const buttonBgColor =
     restaurant_activity === "true" && restaurantID !== null
-      ? mainColor
+      ? primaryColor
       : "#969696";
   const dispatch = useDispatch();
 
@@ -93,10 +95,10 @@ const OrderCard = ({ orderInfo }) => {
             : "flex-row-reverse items-center "
         }
       >
-        <Text className={`text-[${mainColor}] text-base`}>
+        <Text className={`text-[${primaryColor}] text-base`}>
           {restaurant_title}
         </Text>
-        <Text className={`text-[${mainColor}] text-base`}>
+        <Text className={`text-[${primaryColor}] text-base`}>
           {" "}
           {`( ${restaurant_location} )`}
         </Text>
@@ -105,7 +107,7 @@ const OrderCard = ({ orderInfo }) => {
         {products.map((product) => (
           <Text
             key={product.product_id}
-            style={{ fontFamily: mainFont }}
+            style={{ fontFamily: arabicFont }}
             className="text-sm text-gray-600"
           >
             {product.quantity + "x " + product.product_title}
@@ -114,7 +116,7 @@ const OrderCard = ({ orderInfo }) => {
       </View>
       <View className="mt-1 flex-row">
         <Text className="text-gray-600">{formatDate(created_At)}</Text>
-        <Text className={`text-[${mainColor}]`}> . ₺{total}</Text>
+        <Text className={`text-[${primaryColor}]`}> . ₺{total}</Text>
       </View>
       <View>
         <TouchableOpacity
@@ -125,7 +127,7 @@ const OrderCard = ({ orderInfo }) => {
         >
           <Text
             className="text-base text-white"
-            style={{ fontFamily: mainFont }}
+            style={{ fontFamily: arabicFont }}
           >
             {i18n.t("orderAgain")}
           </Text>

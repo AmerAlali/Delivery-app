@@ -12,9 +12,7 @@ const SearchRestaurantCard = ({
   imgUrl,
   title,
   rating,
-  genre,
   adress,
-  short_description,
   dishes,
   activity,
   isdiscounted,
@@ -24,11 +22,13 @@ const SearchRestaurantCard = ({
   reviews,
   deliveryCost,
   deliveryLimit,
+  Rev_service,
+  Rev_delivery,
+  Rev_taste,
 }) => {
   const navigation = useNavigation();
   const { i18n } = useLanguage();
   const mainFont = "arabic-font";
-  const mainColor = "black";
   const CategoryName = "allRestaurants";
   const navgiateToResScreen = useCallback(() => {
     if (activity === "true") {
@@ -37,9 +37,7 @@ const SearchRestaurantCard = ({
         imgUrl,
         title,
         rating,
-        genre,
         adress,
-        short_description,
         dishes,
         res_keywords,
         deliveryLimit,
@@ -48,6 +46,9 @@ const SearchRestaurantCard = ({
         maxDeliveryTime,
         CategoryName,
         reviews,
+        Rev_service,
+        Rev_delivery,
+        Rev_taste,
       });
     }
   }, []);
@@ -101,7 +102,7 @@ const SearchRestaurantCard = ({
             style={{ fontFamily: mainFont }}
             className="text-center text-white text-2xl font-semibold top-16"
           >
-            مغلق حالياً
+            {i18n.t("closedNow")}
           </Text>
         </View>
       ) : null}

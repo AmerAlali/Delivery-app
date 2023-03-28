@@ -31,6 +31,11 @@ import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import { StyleSheet } from "react-native";
 import { useLanguage } from "../hooks/useLanguage";
 import { useRTL } from "../hooks/useRTL";
+import {
+  primaryColor,
+  secondaryColor,
+  arabicFont,
+} from "../variables/themeVariables";
 
 const BasketScreen = () => {
   const navigation = useNavigation();
@@ -142,7 +147,7 @@ const BasketScreen = () => {
                     className="p-2 rounded-full"
                     onPress={handleAddingQuantity}
                   >
-                    <PlusCircleIcon color={mainColor} size={35} />
+                    <PlusCircleIcon color={primaryColor} size={35} />
                   </TouchableOpacity>
                   <Text className="text-3xl w-16 text-center font-bold">
                     {quantity}
@@ -153,7 +158,7 @@ const BasketScreen = () => {
                     onPress={handleRemovingQuantity}
                   >
                     <MinusCircleIcon
-                      color={quantity > 0 ? mainColor : "gray"}
+                      color={quantity > 0 ? primaryColor : "gray"}
                       size={35}
                     />
                   </TouchableOpacity>
@@ -180,12 +185,12 @@ const BasketScreen = () => {
               <View className="border-t mt-2 border-gray-200 p-5">
                 <TouchableOpacity
                   onPress={handleUpdateItem}
-                  style={{ backgroundColor: mainColor }}
+                  style={{ backgroundColor: primaryColor }}
                   className={`p-4 border-t flex-row-reverse items-center justify-center border-gray-100 rounded-md`}
                 >
                   <Text
-                    style={{ fontFamily: mainFont }}
-                    className="text-white text-lg text-center"
+                    style={{ fontFamily: arabicFont, color: secondaryColor }}
+                    className=" text-lg text-center"
                   >
                     {quantity !== 0
                       ? i18n.t("update")
@@ -207,7 +212,7 @@ const BasketScreen = () => {
       <View className="flex-1 bg-gray-100">
         <View
           className="p-5 py-8 border-b bg-white shadow-xs"
-          style={{ borderColor: mainColor }}
+          style={{ borderColor: primaryColor }}
         >
           <View>
             <View>
@@ -222,7 +227,7 @@ const BasketScreen = () => {
               onPress={navigation.goBack}
               className="rounded-full bg-gray-100 absolute top-3 right-5"
             >
-              <XCircleIcon color={mainColor} height={50} width={50} />
+              <XCircleIcon color={primaryColor} height={50} width={50} />
             </TouchableOpacity>
           </View>
         </View>
@@ -250,7 +255,7 @@ const BasketScreen = () => {
               key={key}
               className="flex-row items-center space-x-3 bg-white py-2 px-5"
             >
-              <Text style={{ color: mainColor }}>{item[0]?.quantity} x</Text>
+              <Text style={{ color: primaryColor }}>{item[0]?.quantity} x</Text>
               <Image
                 source={{
                   uri: `https://cravecorner.shop/public/storage/${item[0]?.img}`,
@@ -263,7 +268,7 @@ const BasketScreen = () => {
               <TouchableOpacity>
                 <Text
                   className="text-xs"
-                  style={{ color: mainColor }}
+                  style={{ color: primaryColor }}
                   onPress={() =>
                     dispatch(removeFromBasket({ id: parseInt(key), quantity }))
                   }
@@ -306,7 +311,7 @@ const BasketScreen = () => {
         </View>
         <View className=" bg-white">
           <TouchableOpacity
-            style={{ backgroundColor: mainColor }}
+            style={{ backgroundColor: primaryColor }}
             className="p-4 rounded-xl"
             onPress={() => {
               if (user) {
@@ -323,7 +328,10 @@ const BasketScreen = () => {
               }
             }}
           >
-            <Text className="text-white text-center text-xl">
+            <Text
+              style={{ color: secondaryColor }}
+              className="text-center text-xl"
+            >
               {i18n.t("confirmBasket")}
             </Text>
           </TouchableOpacity>

@@ -1,12 +1,15 @@
 import { View, Text, Image, TouchableOpacity, ScrollView } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { TextInput as Input } from "react-native-paper";
 import { useRegister } from "../hooks/useRegister";
 import { useLanguage } from "../hooks/useLanguage";
+import { primaryColor, secondaryColor } from "../variables/themeVariables";
+import * as Google from "expo-auth-session/providers/google";
+import LoadingOverlay from "../components/LoadingOverlay";
 
 const RegisterScreen = () => {
-  const {i18n} = useLanguage();
-  const mainColor = "#000000"
+  const { i18n } = useLanguage();
+  const mainColor = "#000000";
   const [email, setEmail] = useState("");
   const [fullname, setFullName] = useState("");
   const [phone, setPhone] = useState("");
@@ -15,7 +18,24 @@ const RegisterScreen = () => {
   const [phoneError, setPhoneError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const { Register, error, isLoading } = useRegister();
+  const { Register, error, isLoading, googleLogin } = useRegister();
+
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    androidClientId:
+      "539381058338-lh30c6ss38ij22bu5uiu9igdkup7ttdv.apps.googleusercontent.com",
+    iosClientId:
+      "539381058338-lhdjhiousmq14og0rnq89mn4juglnibe.apps.googleusercontent.com",
+    expoClientId: "",
+  });
+
+  useEffect(() => {
+    const handleGoogleLogin = async () => {
+      if (response?.type === "success") {
+        await googleLogin(response.authentication.idToken);
+      }
+    };
+    handleGoogleLogin();
+  }, [response]);
 
   // Validate email
   const handleEmailValidation = () => {
@@ -69,13 +89,14 @@ const RegisterScreen = () => {
   };
 
   return (
-    <View className="bg-white h-full overflow-hidden tracking-wide">
-      <Image
-        source={require("../assets/LoginBg.jpg")}
-        className="w-full h-52"
-      />
+    <View
+      className="h-full items-center pt-8  overflow-hidden tracking-wide"
+      style={{ backgroundColor: primaryColor }}
+    >
+      <Image source={require("../assets/user-img.png")} className="h-36 w-36" />
       <ScrollView
-        className="bg-[#fdfdfd] -mt-10 h-full w-full p-6"
+        showsVerticalScrollIndicator={false}
+        className="bg-[#fdfdfd] mt-6 h-full w-full p-6"
         style={{ borderTopLeftRadius: 45, borderTopRightRadius: 45 }}
       >
         <View>
@@ -153,10 +174,15 @@ const RegisterScreen = () => {
           <TouchableOpacity
             onPress={handeLogin}
             disabled={isLoading}
-            style={{backgroundColor: mainColor}}
+            style={{ backgroundColor: primaryColor }}
             className="p-3 text-center mt-2 rounded-md"
           >
-            <Text className="text-white text-base text-center">{i18n.t("createAccount")}</Text>
+            <Text
+              style={{ color: secondaryColor }}
+              className="text-base text-center"
+            >
+              {i18n.t("createAccount")}
+            </Text>
           </TouchableOpacity>
           {error && <Text className="text-red-500 mt-3 ">{error}</Text>}
         </View>
@@ -174,7 +200,7 @@ const RegisterScreen = () => {
           />
           <View>
             <Text style={{ width: 50, textAlign: "center", color: "#cccc" }}>
-            {i18n.t("or")}
+              {i18n.t("or")}
             </Text>
           </View>
           <View
@@ -186,15 +212,22 @@ const RegisterScreen = () => {
             }}
           />
         </View>
-        <View className="mt-4 mb-10 flex-row items-center justify-center space-x-4">
-          <TouchableOpacity className="p-3 bg-[#f8f8f8] space-x-3 rounded-full">
+        <View className="mt-4 flex-row items-center justify-center space-x-4">
+          <TouchableOpacity
+            disabled={!request}
+            onPress={() => promptAsync()}
+            className="p-3 flex-row items-center justify-around bg-[#f8f8f8] space-x-3 w-full rounded-md shadow"
+          >
             <Image
               source={require("../assets/google.png")}
-              className="h-5 w-5"
+              className="h-8 w-8"
             />
+            <Text className="pr-12 text-base">Continue With Google</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
+      {/************* Loading Overlay *************/}
+      {isLoading === true && <LoadingOverlay />}
     </View>
   );
 };

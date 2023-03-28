@@ -3,14 +3,12 @@ import React, { memo } from "react";
 import { ArrowLeftIcon, ArrowRightIcon } from "react-native-heroicons/outline";
 import RestaurantCard from "./RestaurantCard";
 import { useRTL } from "../hooks/useRTL";
-import { useLanguage } from "../hooks/useLanguage";
 
 const FeaturedRow = ({ title, restaurants }) => {
-  const { i18n } = useLanguage();
   const mainFont = "arabic-font";
   const mainColor = "black";
   const RTL = useRTL();
-  const isRTL = RTL(i18n.t(title));
+  const isRTL = RTL(title);
   const arrowIcon = isRTL ? (
     <ArrowLeftIcon color={mainColor} />
   ) : (
@@ -66,6 +64,9 @@ const FeaturedRow = ({ title, restaurants }) => {
               mind_time={restaurant.mind_time}
               maxDeliveryTime={restaurant.maxd_time}
               reviews={restaurant.reviews}
+              Rev_service={restaurant.Rev_service}
+              Rev_delivery={restaurant.Rev_delivery}
+              Rev_taste={restaurant.Rev_taste}
             />
           );
         })}

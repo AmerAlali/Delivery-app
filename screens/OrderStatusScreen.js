@@ -18,6 +18,8 @@ import { ScrollView } from "react-native";
 import { useRTL } from "../hooks/useRTL";
 import axios from "axios";
 import OrderStatusSkeleton from "../components/OrderStatusSkeleton";
+import { useLanguage } from "../hooks/useLanguage";
+import { arabicFont, primaryColor } from "../variables/themeVariables";
 
 const mainColor = "#00ccbc";
 const mainFont = "arabic-font";
@@ -28,6 +30,7 @@ const OrderStatusScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [order, setOrder] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+  const { i18n } = useLanguage();
   const navigation = useNavigation();
 
   const fetchOrder = async () => {
@@ -68,7 +71,7 @@ const OrderStatusScreen = () => {
 
   const handleStatusText = useCallback(() => {
     if (order?.order_status === "new") {
-      return "بإنتظار موافقة المطعم";
+      return i18n.t("waitingForRestaurantAccept");
     } else if (order?.order_status === "accepted") {
       return "يتم تجهيز طلبك";
     } else if (order?.order_status === "onWay") {
@@ -119,26 +122,28 @@ const OrderStatusScreen = () => {
     <SafeAreaView className="bg-white flex-1">
       <View>
         {/***** Header *****/}
-        <View
-          className="flex-row justify-between border-b items-center  border-gray-200 shadow space-x-2 p-3  bg-white"
-          style={{ paddingTop: 40 }}
-        >
-          <View>
-            <TouchableOpacity
-              onPress={() =>
-                navigatedFrom === "OrdersScreen"
-                  ? navigation.navigate("Orders")
-                  : navigation.navigate("Home")
-              }
-              className="shadow rounded-full p-3 mr-4"
-            >
-              <ArrowLeftIcon size={25} color={mainColor} />
-            </TouchableOpacity>
-          </View>
-          <View>
-            <Text className="text-xl" style={{ fontFamily: mainFont }}>
-              حالة الطلب
-            </Text>
+        <View className="p-5 py-4 border-b border-[#d8dad9] bg-white shadow-xs">
+          <View className=" flex-row-reverse justify-between items-center">
+            <View>
+              <Text
+                style={{ fontFamily: arabicFont }}
+                className="text-lg text-center"
+              >
+                {i18n.t("orderStatus")}
+              </Text>
+            </View>
+            <View>
+              <TouchableOpacity
+                onPress={() =>
+                  navigatedFrom === "OrdersScreen"
+                    ? navigation.navigate("Orders")
+                    : navigation.navigate("Home")
+                }
+                className="shadow bg-gray-100 rounded-full p-2 mr-4"
+              >
+                <ArrowLeftIcon size={20} color={primaryColor} />
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
         {/***** Body *****/}
@@ -147,7 +152,7 @@ const OrderStatusScreen = () => {
             showsVerticalScrollIndicator={false}
             refreshControl={
               <RefreshControl
-                colors={[mainColor]}
+                colors={[primaryColor]}
                 tintColor={mainColor}
                 refreshing={refreshing}
                 onRefresh={handleRefresh}
@@ -169,8 +174,8 @@ const OrderStatusScreen = () => {
                   />
                 )}
                 <Text
-                  className="text-2xl mt-6"
-                  style={{ fontFamily: mainFont }}
+                  className="text-2xl mt-6 px-3 text-center"
+                  style={{ fontFamily: arabicFont }}
                 >
                   {handleStatusText()}
                 </Text>
@@ -181,7 +186,7 @@ const OrderStatusScreen = () => {
                   className="text-base px-4 my-2"
                   style={{ fontFamily: mainFont }}
                 >
-                  معلومات الطلب
+                  {i18n.t("orderInfo")}
                 </Text>
                 <View className="bg-white w-full p-4 justify-between">
                   <View className="border-b flex-row-reverse justify-between pb-4 border-gray-300">
@@ -189,8 +194,9 @@ const OrderStatusScreen = () => {
                       className="text-base"
                       style={{ fontFamily: mainFont }}
                     >
-                      المطعم
+                      {i18n.t("restaurant")}
                     </Text>
+
                     <Text
                       className={"text-gray-900 text-base"}
                       style={{ fontFamily: mainFont }}
@@ -203,7 +209,7 @@ const OrderStatusScreen = () => {
                       className="text-base"
                       style={{ fontFamily: mainFont }}
                     >
-                      الطلبات
+                      {i18n.t("orders")}
                     </Text>
                     <View>
                       {order?.products.map((product) => (
@@ -222,7 +228,7 @@ const OrderStatusScreen = () => {
                       className="text-base"
                       style={{ fontFamily: mainFont }}
                     >
-                      تاريخ الطلب
+                      {i18n.t("orderDate")}
                     </Text>
                     <View>
                       <Text
@@ -238,7 +244,7 @@ const OrderStatusScreen = () => {
                       className="text-base mb-2"
                       style={{ fontFamily: mainFont }}
                     >
-                      عنوان التوصيل
+                      {i18n.t("deliveryAddress")}
                     </Text>
                     <View>
                       <Text className="text-base text-gray-900">
@@ -251,7 +257,7 @@ const OrderStatusScreen = () => {
                       className="text-base"
                       style={{ fontFamily: mainFont }}
                     >
-                      إجمالي الطلب
+                      {i18n.t("total")}
                     </Text>
                     <View>
                       <Text className="text-base text-gray-900 w-60">

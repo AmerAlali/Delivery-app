@@ -1,9 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Text } from "react-native";
-import {
-  DrawerContentScrollView,
-  DrawerItemList,
-} from "@react-navigation/drawer";
+import { DrawerItemList } from "@react-navigation/drawer";
 import { View } from "react-native";
 import { ImageBackground } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,9 +14,8 @@ import {
 import { useLanguage } from "../hooks/useLanguage";
 import { useRTL } from "../hooks/useRTL";
 import { Linking } from "react-native";
-import { AntDesign, Ionicons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import * as SecureStore from "expo-secure-store";
 import { logout } from "../features/userSlice";
 import { setAddress } from "../features/addressSlice";
 import { setSelectedAddress } from "../features/selectedAddressSlice";
@@ -39,13 +35,9 @@ const CustomDrawer = (props) => {
     <ChevronRightIcon size={25} color={mainColor}></ChevronRightIcon>
   );
 
-  const cardIconText = RTL(i18n.t("logout"))
-    ? "flex-row align-middle space-x-2"
-    : "flex-row-reverse align-middle";
-
   const cardsClasses = RTL(i18n.t("logout"))
-    ? "p-4 flex-row-reverse justify-between items-center"
-    : "p-4 flex-row justify-between items-center";
+    ? "flex-row-reverse justify-between mx-5"
+    : "flex-row-reverse justify-end mx-5";
   const mainFont = "arabic-font";
   const mainColor = "#2C3333";
   useEffect(() => {
@@ -74,7 +66,7 @@ const CustomDrawer = (props) => {
     if (user) {
       handleLogoutUser(user.token);
     }
-    await SecureStore.deleteItemAsync("user");
+    await AsyncStorage.removeItem("user");
     dispatch(logout());
     //clear the addresses
     dispatch(setAddress(null));
@@ -94,44 +86,47 @@ const CustomDrawer = (props) => {
   }
   return (
     <View className="flex-1">
-      <View className="bg-[#ffd700] absolute h-10 top-0 z-10 w-full"></View>
-      <View
-        style={{
-          shadowColor: "#000000",
-          shadowOffset: {
-            width: 0,
-            height: 3,
-          },
-          shadowOpacity: 0.3,
-          shadowRadius: 3.05,
-          elevation: 3,
-        }}
-        className="bg-[#ffd700] left-5 px-5 rounded-md absolute z-10 top-44 mt-1"
-      >
-        <Text className="text-xl font-bold  text-gray-600">
-          {userInfo?.name} Alali
-        </Text>
-      </View>
-      <DrawerContentScrollView {...props}>
-        <ImageBackground
-          source={require("../assets/cold_smooth__tasty._1.png")}
-          className="h-40 w-full"
-        />
-
-        <View className="flex-1 mt-4 ">
-          <DrawerItemList {...props} />
+      {user && (
+        <View
+          style={{
+            shadowColor: "#000000",
+            shadowOffset: {
+              width: 0,
+              height: 3,
+            },
+            shadowOpacity: 0.3,
+            shadowRadius: 3.05,
+            elevation: 3,
+          }}
+          className="bg-[#ffd700] left-5 px-5 rounded-md absolute z-10 top-36 mt-1"
+        >
+          <Text className="text-xl font-bold  text-gray-600">
+            {userInfo?.name}
+          </Text>
         </View>
-      </DrawerContentScrollView>
+      )}
+      <ImageBackground
+        source={require("../assets/cold_smooth__tasty._1.png")}
+        className="h-40 w-full"
+      />
+
+      <View className="flex-1 mt-4 ">
+        <DrawerItemList {...props} />
+      </View>
       {/************* logout button *************/}
       <View>
         <TouchableOpacity
           onPress={() =>
             Linking.openURL("https://wa.me/message/AKUADL6BIMUXH1")
           }
-          className={cardsClasses}
         >
-          <View className={cardIconText}>
-            <Text style={{ fontFamily: mainFont }} className="text-lg ml-3">
+          <View className={cardsClasses}>
+            <Text
+              style={{ fontFamily: mainFont }}
+              className={`${
+                RTL(i18n.t("logout")) ? "text-[15px] mr-8" : "text-[15px] ml-8"
+              } text-gray-500`}
+            >
               {i18n.t("contactLabel")}
             </Text>
             <AntDesign name="contacts" size={24} color="black" />
@@ -140,16 +135,23 @@ const CustomDrawer = (props) => {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => (user ? LogoutUser() : navigation.navigate("Login"))}
-          className={cardsClasses}
         >
-          <View className={cardIconText}>
-            <Text style={{ fontFamily: mainFont }} className="text-lg ml-3">
-              {user ? i18n.t("logout") : i18n.t("login")}
-            </Text>
-            <ArrowRightCircleIcon
-              size={24}
-              color={mainColor}
-            ></ArrowRightCircleIcon>
+          <View className={cardsClasses}>
+            <View>
+              <Text
+                style={{ fontFamily: mainFont }}
+                className={`${
+                  RTL(i18n.t("logout"))
+                    ? "text-[15px] mr-8"
+                    : "text-[15px] ml-8"
+                } text-gray-500`}
+              >
+                {user ? i18n.t("logout") : i18n.t("login")}
+              </Text>
+            </View>
+            <View>
+              <ArrowRightCircleIcon size={24} color={mainColor} />
+            </View>
           </View>
           <View>{arrowIcon}</View>
         </TouchableOpacity>

@@ -10,6 +10,7 @@ import { addToBasket } from "../features/basketSlice";
 import { useDispatch } from "react-redux";
 import { useRTL } from "../hooks/useRTL";
 import { useLanguage } from "../hooks/useLanguage";
+import { primaryColor, secondaryColor } from "../variables/themeVariables";
 
 const mainFont = "arabic-font";
 const mainColor = "#000000";
@@ -17,7 +18,7 @@ const ProductScreen = () => {
   const {
     params: { id, name, description, price, img, restaurant_id, discount },
   } = useRoute();
-  const {i18n} = useLanguage();
+  const { i18n } = useLanguage();
   const checkIfRTL = useRTL();
   const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
@@ -56,7 +57,7 @@ const ProductScreen = () => {
           onPress={navigation.goBack}
           className="absolute top-14 left-5 z-10 bg-gray-100 rounded-full p-2"
         >
-          <ArrowLeftIcon size={20} color={mainColor} />
+          <ArrowLeftIcon size={20} color={secondaryColor} />
         </TouchableOpacity>
         <Image
           style={{ resizeMode: "cover" }}
@@ -89,7 +90,7 @@ const ProductScreen = () => {
             onPress={handleAddingQuantity}
           >
             <PlusCircleIcon
-              color={mainColor}
+              color={primaryColor}
               //color={items.length > 0 ? "#00CCBB" : "gray"}
               size={35}
             />
@@ -103,7 +104,7 @@ const ProductScreen = () => {
             onPress={handleRemovingQuantity}
           >
             <MinusCircleIcon
-              color={quantity > 1 ? mainColor : "gray"}
+              color={quantity > 1 ? primaryColor : "gray"}
               size={35}
             />
           </TouchableOpacity>
@@ -111,18 +112,23 @@ const ProductScreen = () => {
         <View className="border-t mt-2 border-gray-200 p-5">
           <TouchableOpacity
             onPress={addItemToBasket}
-            style={{backgroundColor: mainColor}}
-            className={`p-4 border-t ${checkIfRTL(i18n.t("addToBasket")) ? "flex-row-reverse" : "flex-row"} items-center justify-center border-gray-100 rounded-md`}
+            style={{ backgroundColor: primaryColor }}
+            className={`p-4 border-t ${
+              checkIfRTL(i18n.t("addToBasket"))
+                ? "flex-row-reverse"
+                : "flex-row"
+            } items-center justify-center border-gray-100 rounded-md`}
           >
             <Text
-              style={{ fontFamily: mainFont }}
-              className="text-center text-white text-lg"
+              style={{ fontFamily: mainFont, color: secondaryColor }}
+              className="text-center text-lg"
             >
               {i18n.t("addToBasket")}
             </Text>
-            <Text className="text-white text-lg">
-              
-              {checkIfRTL(i18n.t("addToBasket")) ? "₺" + quantity * (price - discount) + " . " : " . ₺" + quantity * (price - discount)}
+            <Text className=" text-lg" style={{ color: secondaryColor }}>
+              {checkIfRTL(i18n.t("addToBasket"))
+                ? "₺" + quantity * (price - discount) + " . "
+                : " . ₺" + quantity * (price - discount)}
             </Text>
           </TouchableOpacity>
         </View>

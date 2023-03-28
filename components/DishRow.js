@@ -15,12 +15,6 @@ const DishRow = ({
 
   const navigation = useNavigation();
 
-  /*const removeItemFromBasket = useCallback(() => {
-    if (!itemsLength) return;
-    console.log("???");
-    dispatch(removeFromBasket({ id, quantity }));
-  }, [items]);*/
-
   const handleNavigateToProductScreen = useCallback(() => {
     navigation.navigate("ProductDetails", {
       id,
@@ -41,10 +35,22 @@ const DishRow = ({
       >
         <View className={checkIfRTL(name) ? `flex-row-reverse` : "flex-row"}>
           <View className="flex-1 or-2">
-            <Text style={{ fontFamily: mainFont }} className="text-lg mb-1">
+            <Text
+              style={{
+                fontFamily: mainFont,
+                textAlign: checkIfRTL(name) ? "right" : "left",
+              }}
+              className="text-lg mb-1"
+            >
               {name}
             </Text>
-            <Text style={{ fontFamily: mainFont }} className="text-gray-400">
+            <Text
+              style={{
+                fontFamily: mainFont,
+                textAlign: checkIfRTL(name) ? "right" : "left",
+              }}
+              className="text-gray-400"
+            >
               {description}
             </Text>
             <Text

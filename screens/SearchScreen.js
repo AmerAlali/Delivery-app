@@ -13,13 +13,17 @@ import {
 } from "react-native";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import SearchRestaurantCard from "../components/SearchRestaurantCard";
-
+import { primaryColor, secondaryColor } from "../variables/themeVariables";
+import { useLanguage } from "../hooks/useLanguage";
+import { useRTL } from "../hooks/useRTL";
 const SearchScreen = () => {
+  const { i18n } = useLanguage();
   const [SearchTerm, setSearchTerm] = useState("");
   const [results, setResults] = useState();
   const [timerId, setTimerId] = useState(null);
   const [searchFailed, setSearchFailed] = useState(null);
   const navigation = useNavigation();
+  const RTL = useRTL();
 
   const {
     params: { restaurants },
@@ -40,6 +44,9 @@ const SearchScreen = () => {
       }, 500)
     );
   };
+  const noResultsText = RTL(i18n.t("searchPlaceholder"))
+    ? `${`"` + SearchTerm + `"`}` + " " + i18n.t("noSearchResults")
+    : i18n.t("noSearchResults") + " " + `${`"` + SearchTerm + `"`}`;
 
   const executeSearch = (term) => {
     if (restaurants !== null && restaurants.length !== 0) {
@@ -69,7 +76,7 @@ const SearchScreen = () => {
           >
             <MagnifyingGlassIcon color="gray" size={20} />
             <TextInput
-              placeholder="إبحث عن مطاعم"
+              placeholder={i18n.t("searchPlaceholder")}
               autoFocus={true}
               keyboardType="default"
               value={SearchTerm}
@@ -82,7 +89,7 @@ const SearchScreen = () => {
               onPress={navigation.goBack}
               className="shadow bg-gray-100 rounded-full p-2 mr-4"
             >
-              <ArrowLeftIcon size={20} color="#00ccbc" />
+              <ArrowLeftIcon size={20} color={primaryColor} />
             </TouchableOpacity>
           </View>
         </View>
@@ -93,8 +100,7 @@ const SearchScreen = () => {
                 style={{ fontFamily: "arabic-font" }}
                 className="text-lg text-center mt-4 text-gray-600"
               >
-                {" "}
-                "{SearchTerm}" لا يوجد لدينا أي مطعم ب اسم
+                {noResultsText}
               </Text>
             </View>
           )}
