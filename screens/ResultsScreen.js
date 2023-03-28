@@ -8,6 +8,7 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import { arabicFont, secondaryColor } from "../variables/themeVariables";
+import { API_URL } from "@env";
 
 const ResultsScreen = () => {
   const navigation = useNavigation();
@@ -19,7 +20,7 @@ const ResultsScreen = () => {
   } = useRoute();
   const fetchRestaurantsByCategory = async () => {
     const response = await axios.get(
-      `https://cravecorner.shop/api/fetchByCategory?category_id=${category_id}}&neigh_id=${neighborhoodID[0]}`,
+      `${API_URL}/fetchByCategory?category_id=${category_id}}&neigh_id=${neighborhoodID[0]}`,
       { headers: { userAgent: "CraveMobile" } }
     );
     setRestaurants(response.data);

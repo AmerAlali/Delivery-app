@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import * as Location from "expo-location";
-
+import { GoogleMapsApiKey } from "@env";
 export const useLocation = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
@@ -17,7 +17,7 @@ export const useLocation = () => {
       const { latitude, longitude } = coords;
       const [addressRes] = await Promise.all([
         axios.post(
-          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=AIzaSyAqFPn1icSrIlBjMXKcrYftXNcdXqU9mDw`
+          `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${GoogleMapsApiKey}`
         ),
       ]);
 

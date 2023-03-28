@@ -19,6 +19,7 @@ import LoadingOverlay from "../components/LoadingOverlay";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import OTPTextInput from "react-native-otp-textinput";
 import { CountdownCircleTimer } from "react-native-countdown-circle-timer";
+import { API_URL } from "@env";
 
 import axios from "axios";
 
@@ -41,7 +42,7 @@ const OtpScreen = () => {
     Keyboard.dismiss();
     try {
       const response = await axios.get(
-        `https://cravecorner.shop/api/validate_otp?email=${email}&otp=${otp}`,
+        `${API_URL}/validate_otp?email=${email}&otp=${otp}`,
         { headers: { userAgent: "CraveMobile" } }
       );
       if (response.data?.success) {

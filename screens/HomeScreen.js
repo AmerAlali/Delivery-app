@@ -46,7 +46,8 @@ import { clearBasketItems, getBasketItems } from "../features/basketSlice";
 import StarRating from "react-native-star-rating-widget";
 import { Modal } from "react-native-paper";
 import { useLanguage } from "../hooks/useLanguage";
-
+import { primaryColor, secondaryColor } from "../variables/themeVariables";
+import { API_URL } from "@env";
 const HomeScreen = () => {
   const { i18n } = useLanguage();
   const navigation = useNavigation();
@@ -92,12 +93,11 @@ const HomeScreen = () => {
       fetchAddresses(user);
     }
   }, [user]);
-
   // fetch restaurants
   const fetchRestaurants = useCallback(async () => {
     try {
       const response = await axios.get(
-        `https://cravecorner.shop/api/showRestaurants?neigh_id=${neighborhoodID[0]}`,
+        `${API_URL}/showRestaurants?neigh_id=${neighborhoodID[0]}`,
         {
           headers: {
             userAgent: "CraveMobile",
@@ -168,7 +168,7 @@ const HomeScreen = () => {
   // review functions
   const handleCheckingLastOrder = async () => {
     const response = await axios.get(
-      `https://cravecorner.shop/api/lastOrder?token=${user.token}`
+      `${API_URL}/lastOrder?token=${user.token}`
     );
     if (response.data !== "null") {
       setIsReviewModalOpen(true);
@@ -187,7 +187,7 @@ const HomeScreen = () => {
     }
   }, [user, loading]);
   const handleSendingReview = () => {
-    axios.post("https://cravecorner.shop/api/storeReview", {
+    axios.post(`${API_URL}/storeReview`, {
       token: user.token,
       taste: rating.foodTaste * 2,
       order_id: lastOrder.order_id,
@@ -474,11 +474,12 @@ const HomeScreen = () => {
                   rating.services === 0
                 }
                 onPress={() => handleSendingReview()}
-                className={`p-2 mt-4 bg-[mainColor] w-full rounded-md`}
+                style={{ backgroundColor: primaryColor }}
+                className={`p-2 mt-4 w-full rounded-md`}
               >
                 <Text
-                  className="text-center text-lg text-white"
-                  style={{ fontFamily: "arabic-font" }}
+                  className="text-center text-lg"
+                  style={{ fontFamily: "arabic-font", color: secondaryColor }}
                 >
                   قيم
                 </Text>

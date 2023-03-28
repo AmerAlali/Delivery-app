@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { clearBasketItems } from "../features/basketSlice";
+import { API_URL } from "@env";
 
 export const useCreateOrder = () => {
   const [error, setError] = useState(null);
@@ -25,22 +26,19 @@ export const useCreateOrder = () => {
     setError(null);
 
     try {
-      const response = await axios.post(
-        "https://cravecorner.shop/api/storeOrder",
-        {
-          token: user.token,
-          restaurant_id: restaurant_id,
-          address: address,
-          payment: payment,
-          note: note,
-          total: total,
-          discount: discount,
-          deliveryCost: deliveryCost,
-          datalist: datalist,
-          voucher: voucher,
-          phone: phone,
-        }
-      );
+      const response = await axios.post(`${API_URL}/storeOrder`, {
+        token: user.token,
+        restaurant_id: restaurant_id,
+        address: address,
+        payment: payment,
+        note: note,
+        total: total,
+        discount: discount,
+        deliveryCost: deliveryCost,
+        datalist: datalist,
+        voucher: voucher,
+        phone: phone,
+      });
       disptach(clearBasketItems());
       return response.data;
     } catch (error) {

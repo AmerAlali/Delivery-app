@@ -9,6 +9,7 @@ import {
   secondaryColor,
   arabicFont,
 } from "../variables/themeVariables";
+import { API_URL } from "@env";
 import { AntDesign } from "@expo/vector-icons";
 const AdressCard = ({
   id,
@@ -26,7 +27,7 @@ const AdressCard = ({
   const dispatch = useDispatch();
   const handleAddressDelete = useCallback(() => {
     axios
-      .delete("https://cravecorner.shop/api/user/address/delete", {
+      .delete(`${API_URL}/user/address/delete`, {
         headers: {
           Authorization: "Bearer " + user.token,
           "Content-Type": "application/json",

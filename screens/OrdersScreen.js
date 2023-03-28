@@ -1,25 +1,14 @@
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  ScrollView,
-  BackHandler,
-} from "react-native";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import React, { useEffect, useState } from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { XMarkIcon } from "react-native-heroicons/solid";
 import OrderCard from "../components/OrderCard";
-import { useFocusEffect, useNavigation } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import OrderScreenSkeleton from "../components/OrderScreenSkeleton";
 import { useLanguage } from "../hooks/useLanguage";
 import { ArrowLeftIcon } from "react-native-heroicons/outline";
-import {
-  arabicFont,
-  primaryColor,
-  secondaryColor,
-} from "../variables/themeVariables";
+import { arabicFont, secondaryColor } from "../variables/themeVariables";
+import { API_URL } from "@env";
 const OrdersScreen = () => {
   const { user } = useSelector((state) => state.user);
   const { i18n } = useLanguage();
@@ -30,7 +19,7 @@ const OrdersScreen = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       const response = await axios.get(
-        `https://cravecorner.shop/api/userOrders?token=${user.token}`,
+        `${API_URL}/userOrders?token=${user.token}`,
         { token: user.token }
       );
       setOrders(response.data);

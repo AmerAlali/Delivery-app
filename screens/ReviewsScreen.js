@@ -11,6 +11,7 @@ import { StarIcon } from "react-native-heroicons/solid";
 import axios from "axios";
 import { FlatList } from "react-native";
 import ReviewsScreenSkeleton from "../components/ReviewsScreenSkeleton";
+import { API_URL } from "@env";
 const ReviewsScreen = () => {
   const {
     params: { id, imgUrl, title, rating, Rev_service, Rev_delivery, Rev_taste },
@@ -22,7 +23,7 @@ const ReviewsScreen = () => {
   const fetchReviews = async () => {
     try {
       const response = await axios.get(
-        `https://cravecorner.shop/api/getReviews?restaurant_id=${id}`,
+        `${API_URL}/getReviews?restaurant_id=${id}`,
         { headers: { userAgent: "CraveMobile" } }
       );
       setReviews(response.data);

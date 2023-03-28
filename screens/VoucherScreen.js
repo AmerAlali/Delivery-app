@@ -13,7 +13,7 @@ import { Modal, TextInput } from "react-native-paper";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { setVoucherDiscount } from "../features/voucherSlice";
-
+import { API_URL } from "@env";
 const VoucherScreen = () => {
   const navigation = useNavigation();
   const { i18n } = useLanguage();
@@ -37,7 +37,7 @@ const VoucherScreen = () => {
       Keyboard.dismiss();
       if (VoucherText.replace(" ", "").length >= 1) {
         const response = await axios.get(
-          `https://cravecorner.shop/api/validate_voucher?voucher=${VoucherText.replace(
+          `${API_URL}/validate_voucher?voucher=${VoucherText.replace(
             " ",
             ""
           )}&token=${user.token}`,

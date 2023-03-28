@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import * as turf from "@turf/turf";
+import { API_URL } from "@env";
 
 export const useValidateAddress = () => {
   const [error, setError] = useState(null);
@@ -33,7 +34,7 @@ export const useValidateAddress = () => {
 
     try {
       const response = await axios.post(
-        "https://cravecorner.shop/api/validate_address",
+        `${API_URL}/validate_address`,
         { postCode: postCode },
         {
           headers: {

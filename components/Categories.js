@@ -5,6 +5,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useEffect } from "react";
 import { useLanguage } from "../hooks/useLanguage";
+import { API_URL } from "@env";
 
 const Categories = () => {
   const { i18n } = useLanguage();
@@ -12,14 +13,11 @@ const Categories = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const response = await axios.get(
-        "https://cravecorner.shop/api/getKeywords",
-        {
-          headers: {
-            userAgent: "CraveMobile",
-          },
-        }
-      );
+      const response = await axios.get(`${API_URL}/getKeywords`, {
+        headers: {
+          userAgent: "CraveMobile",
+        },
+      });
       setCategories(response.data);
     };
     fetchCategories();

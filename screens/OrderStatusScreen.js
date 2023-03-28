@@ -20,7 +20,7 @@ import axios from "axios";
 import OrderStatusSkeleton from "../components/OrderStatusSkeleton";
 import { useLanguage } from "../hooks/useLanguage";
 import { arabicFont, primaryColor } from "../variables/themeVariables";
-
+import { API_URL } from "@env";
 const mainColor = "#00ccbc";
 const mainFont = "arabic-font";
 const OrderStatusScreen = () => {
@@ -35,7 +35,7 @@ const OrderStatusScreen = () => {
 
   const fetchOrder = async () => {
     const response = await axios.get(
-      `https://cravecorner.shop/api/userOrderWithID?id=${order_id}`,
+      `${API_URL}/userOrderWithID?id=${order_id}`,
       { headers: { userAgent: "CraveMobile" } }
     );
     setOrder(response.data[0]);

@@ -17,6 +17,7 @@ import { setNeighborhoodID } from "../features/neighborhoodSlice";
 import { useLanguage } from "../hooks/useLanguage";
 import { primaryColor, secondaryColor } from "../variables/themeVariables";
 import { Alert } from "react-native";
+import { API_URL } from "@env";
 const AddressFormScreen = () => {
   const {
     params: { Address },
@@ -121,7 +122,7 @@ const AddressFormScreen = () => {
   const handleSaveAddress = async () => {
     if (validateInputsAndFocus()) {
       await axios
-        .post("https://cravecorner.shop/api/user/address/add", newAddress, {
+        .post(`${API_URL}/user/address/add`, newAddress, {
           headers: {
             Authorization: "Bearer " + user.token,
           },

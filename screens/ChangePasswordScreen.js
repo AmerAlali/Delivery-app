@@ -16,6 +16,7 @@ import LoadingOverlay from "../components/LoadingOverlay";
 import axios from "axios";
 import { Keyboard } from "react-native";
 import { Octicons } from "@expo/vector-icons";
+import { API_URL } from "@env";
 
 const ChangePasswordScreen = () => {
   const {
@@ -41,7 +42,7 @@ const ChangePasswordScreen = () => {
     if (handlePasswordValidation()) {
       await axios
         .post(
-          "https://cravecorner.shop/api/UpdatePass",
+          `${API_URL}/UpdatePass`,
           {
             email: email,
             password: newPassword,

@@ -8,6 +8,7 @@ import * as Google from "expo-auth-session/providers/google";
 import LoadingOverlay from "../components/LoadingOverlay";
 import { useLanguage } from "../hooks/useLanguage";
 import { primaryColor, secondaryColor } from "../variables/themeVariables";
+import { androidClientId, iosClientId, expoClientId } from "@env";
 WebBrowser.maybeCompleteAuthSession();
 const LoginScreen = () => {
   const mainColor = "#000000";
@@ -20,11 +21,9 @@ const LoginScreen = () => {
   const { i18n } = useLanguage();
 
   const [request, response, promptAsync] = Google.useAuthRequest({
-    androidClientId:
-      "539381058338-lh30c6ss38ij22bu5uiu9igdkup7ttdv.apps.googleusercontent.com",
-    iosClientId:
-      "539381058338-lhdjhiousmq14og0rnq89mn4juglnibe.apps.googleusercontent.com",
-    expoClientId: "",
+    androidClientId,
+    iosClientId,
+    expoClientId,
   });
 
   useEffect(() => {

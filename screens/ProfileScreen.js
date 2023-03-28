@@ -9,7 +9,7 @@ import axios from "axios";
 import { useLanguage } from "../hooks/useLanguage";
 import { Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { secondaryColor } from "../variables/themeVariables";
-
+import { API_URL } from "@env";
 const ProfileScreen = () => {
   const navigation = useNavigation();
   const { i18n } = useLanguage();
@@ -18,7 +18,7 @@ const ProfileScreen = () => {
   useEffect(() => {
     axios
       .post(
-        "https://cravecorner.shop/api/getUser",
+        `${API_URL}/getUser`,
         { token: user.token },
         {
           headers: {

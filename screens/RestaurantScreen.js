@@ -18,6 +18,7 @@ import RestaurantDishesSkeleton from "../components/RestaurantDishesSkeleton";
 import * as Animatable from "react-native-animatable";
 import { SharedElement } from "react-navigation-shared-element";
 import { primaryColor, secondaryColor } from "../variables/themeVariables";
+import { API_URL } from "@env";
 const mainFont = "arabic-font";
 const RestaurantScreen = () => {
   const navigation = useNavigation();
@@ -48,14 +49,11 @@ const RestaurantScreen = () => {
     try {
       setIsLoading(true);
       axios
-        .get(
-          `https://cravecorner.shop/api/restaurantCategories?restaruant_id=${id}`,
-          {
-            headers: {
-              userAgent: "CraveMobile",
-            },
-          }
-        )
+        .get(`${API_URL}/restaurantCategories?restaruant_id=${id}`, {
+          headers: {
+            userAgent: "CraveMobile",
+          },
+        })
         .then((response) => {
           setRestaurantCategories(response.data);
           setIsLoading(null);

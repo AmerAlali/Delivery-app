@@ -8,6 +8,7 @@ import { useAddress } from "./useAddress";
 import { setSelectedAddress } from "../features/selectedAddressSlice";
 import { setNeighborhoodID } from "../features/neighborhoodSlice";
 import * as Notifications from "expo-notifications";
+import { API_URL } from "@env";
 
 export const useLogin = () => {
   const [error, setError] = useState(null);
@@ -57,7 +58,7 @@ export const useLogin = () => {
     console.log(user);
     if (DeviceID) {
       await axios.post(
-        "https://cravecorner.shop/api/storeDeviceIDs",
+        `${API_URL}/storeDeviceIDs`,
         {
           device_id: DeviceID.data,
           token: user.token,
@@ -74,7 +75,7 @@ export const useLogin = () => {
 
       try {
         const response = await axios.post(
-          `https://cravecorner.shop/api/googleAuth`,
+          `${API_URL}/googleAuth`,
           { token: idToken },
           { headers: { userAgent: "CraveMobile" } }
         );
@@ -106,7 +107,7 @@ export const useLogin = () => {
 
       try {
         const response = await axios.post(
-          "https://cravecorner.shop/api/login",
+          `${API_URL}/login`,
           { email, password },
           { headers: { userAgent: "CraveMobile" } }
         );

@@ -4,7 +4,7 @@ import { login as loginAction } from "../features/userSlice";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-
+import { API_URL } from "@env";
 export const useRegister = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(null);
@@ -21,7 +21,7 @@ export const useRegister = () => {
     formData.append("phone", phone);
     formData.append("password", password);
     await axios
-      .post("https://cravecorner.shop/api/register", formData, {
+      .post(`${API_URL}/register`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           userAgent: "CraveMobile",

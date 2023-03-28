@@ -4,7 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useLanguage } from "../hooks/useLanguage";
 import { ArrowLeftIcon } from "react-native-heroicons/solid";
 import { Modal, RadioButton } from "react-native-paper";
-import { reloadAsync } from "expo-updates";
+//import { reloadAsync } from "expo-updates";
 const SettingsScreen = () => {
   const navigation = useNavigation();
   const { i18n, setLanguage } = useLanguage();
@@ -16,7 +16,7 @@ const SettingsScreen = () => {
   const handleChangeLanguage = async (newValue) => {
     setValue(newValue);
     setLanguage(newValue);
-    await reloadAsync();
+    //await reloadAsync();
     //setLangauge(newValue);
   };
   return (

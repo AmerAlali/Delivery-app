@@ -13,7 +13,7 @@ import { setPaymentMethod } from "../features/paymentMethodSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useLanguage } from "../hooks/useLanguage";
 import { useRTL } from "../hooks/useRTL";
-import { primaryColor, secondaryColor } from "../variables/themeVariables";
+import { primaryColor } from "../variables/themeVariables";
 const mainFont = "arabic-font";
 const mainColor = "#000000";
 const CustomRadioButton = ({ label, value, Icon, onPress, checked, isRTL }) => {

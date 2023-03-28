@@ -11,6 +11,7 @@ import {
 import LoadingOverlay from "../components/LoadingOverlay";
 import axios from "axios";
 import { Keyboard } from "react-native";
+import { API_URL } from "@env";
 
 const ResetPasswordScreen = () => {
   const navigation = useNavigation();
@@ -24,10 +25,7 @@ const ResetPasswordScreen = () => {
     try {
       setIsLoading(true);
       const response = await axios.get(
-        `https://cravecorner.shop/api/ForgotPass_OTP?email=${email.replace(
-          " ",
-          ""
-        )}`,
+        `${API_URL}/ForgotPass_OTP?email=${email.replace(" ", "")}`,
         {
           headers: {
             userAgent: "CraveMobile",

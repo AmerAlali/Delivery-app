@@ -21,7 +21,7 @@ import { setAddress } from "../features/addressSlice";
 import { setSelectedAddress } from "../features/selectedAddressSlice";
 import { setNeighborhoodID } from "../features/neighborhoodSlice";
 import { DrawerActions, useNavigation } from "@react-navigation/native";
-
+import { API_URL } from "@env";
 const CustomDrawer = (props) => {
   const { user } = useSelector((state) => state.user);
   const navigation = useNavigation();
@@ -44,7 +44,7 @@ const CustomDrawer = (props) => {
     if (user) {
       axios
         .post(
-          "https://cravecorner.shop/api/getUser",
+          `${API_URL}/getUser`,
           { token: user.token },
           {
             headers: {
@@ -57,7 +57,7 @@ const CustomDrawer = (props) => {
   }, [user]);
   const handleLogoutUser = async (token) => {
     try {
-      await axios.get(`https://cravecorner.shop/api/logout?token=${token}`);
+      await axios.get(`${API_URL}/logout?token=${token}`);
     } catch (error) {
       return;
     }
